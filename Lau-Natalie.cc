@@ -24,7 +24,7 @@ using std::string;
 
 // Prototypes
 void printMenu();
-void userInput(int *);
+void userInt(int *);
 void matrixInput(int *[], int *[]);
 void userMatrixChoice(char *);
 void fillMatrix(int *[]);
@@ -42,15 +42,17 @@ int main()
     int **matrixA, **matrixB; // TODO: change
 
     printMenu();
-    while (input == 0)
+    // ask for user input while not an int from 1 to 4 (inclusive)
+    while (input < 1 || input > 4)
     {
-        userInput(&input);
-        if (input == 0)
+        userInt(&input);
+        if (input < 1 || input > 4)
         {
             cout << "Please enter a valid input.\n";
             printMenu();
         }
     }
+    
     switch (input)
     {
     case 1:
@@ -88,12 +90,12 @@ void printMenu()
 }
 
 /**
- * @brief Get and error check user input. If the input is not a number
- * from 1 to 4 (inclusive), set output parameter to 0.
+ * @brief Get and error check user input. If the input is not an int,
+ * set output parameter to 0.
  *
  * @param[out] intInput A pointer to the integer version of the user input
  */
-void userInput(int *intInput)
+void userInt(int *intInput)
 {
     using std::cin;
     using std::stoi;
@@ -102,8 +104,8 @@ void userInput(int *intInput)
 
     cin >> input;
 
-    // return if input is not an int from 1 to 4
-    if (!isNumber(input) || stoi(input) < 1 || stoi(input) > 4)
+    // return if input is not an int
+    if (!isNumber(input))
     {
         *intInput = 0;
         return;
