@@ -52,7 +52,7 @@ int main()
             printMenu();
         }
     }
-    
+
     switch (input)
     {
     case 1:
@@ -174,18 +174,25 @@ void userMatrixChoice(char *inputChar)
  */
 void fillMatrix(int *matrix[])
 {
+    using std::cout;
+
     int height, width;
     getDimensions(&height, &width);
+    
+    cout << height;
+    cout << "\n";
+    cout << width;
 }
 
 void getDimensions(int *height, int *width)
 {
-    using std::cin;
-    using std::string;
+    using std::cout;
 
-    string input;
+    cout << "\nHeight: ";
+    userInt(height);
 
-    cin >> input;
+    cout << "\nWidth: ";
+    userInt(width);
 
     // return if 
     // if (!isdigit(input))
