@@ -42,7 +42,7 @@ int main()
     int **matrixA, **matrixB; // TODO: change
 
     printMenu();
-    // ask for user input while not an int from 1 to 4 (inclusive)
+    // Continually ask for user input until input is an int from 1 to 4 (inclusive)
     while (input < 1 || input > 4)
     {
         userInt(&input);
@@ -128,6 +128,8 @@ void matrixInput(int *matrixA[], int *matrixB[])
 
     char matrix = '\0';
     
+    // Continually ask for user input until a valid input is given.
+    // A valid input is one of the following: 'A', 'a', 'B', 'b'
     while (matrix == '\0')
     {
         cout << "\nWould you like to input matrix A or B?\n";
@@ -168,9 +170,10 @@ void userMatrixChoice(char *inputChar)
 }
 
 /**
- * @brief 
+ * @brief Set the dimensions of the matrix based on user
+ * input, then fill with integers based on user input.
  * 
- * @param matrix 
+ * @param[out] matrix A pointer to the matrix
  */
 void fillMatrix(int *matrix[])
 {
@@ -178,12 +181,14 @@ void fillMatrix(int *matrix[])
 
     int height, width;
     getDimensions(&height, &width);
-    
-    cout << height;
-    cout << "\n";
-    cout << width;
 }
 
+/**
+ * @brief Set the height and width of the matrix.
+ * 
+ * @param[out] height A pointer to the integer representing the desired height of the matrix
+ * @param[out] width A pointer to the integer representing the desired width of the matrix
+ */
 void getDimensions(int *height, int *width)
 {
     using std::cout;
@@ -191,18 +196,8 @@ void getDimensions(int *height, int *width)
     cout << "\nHeight: ";
     userInt(height);
 
-    cout << "\nWidth: ";
+    cout << "Width: ";
     userInt(width);
-
-    // return if 
-    // if (!isdigit(input))
-    // {
-    //     free(input);
-    //     *inputChar = '\0';
-    //     return;
-    // }
-
-    // free(input);
 }
 
 void transposeMatrix()
