@@ -19,6 +19,7 @@
 #include <iostream>
 #include <ctype.h>
 #include <limits>
+#include <vector>
 
 using std::string;
 
@@ -29,6 +30,7 @@ void matrixInput(int *[], int *[]);
 void userMatrixChoice(char *);
 void fillMatrix(int *[]);
 void getDimensions(int *, int *);
+void fillRow(int [], int);
 void transposeMatrix();
 void multiplyMatrices();
 bool isNumber(string);
@@ -65,7 +67,6 @@ int main()
         multiplyMatrices();
         break;
     case 4:
-        cout << input;
         cout << "\nBye!\n";
         return 0;
     }
@@ -82,7 +83,7 @@ void printMenu()
     cout << "*   Linear Algebra Library   *\n";
     cout << "******************************\n";
     cout << "*  Please choose an option.  *\n";
-    cout << "*  1. Input matrix           *\n"; // TODO: ask A or B
+    cout << "*  1. Input matrix           *\n";
     cout << "*  2. Transpose matrix       *\n";
     cout << "*  3. Matrix multiplication  *\n"; // TODO: ask order, store?
     cout << "*  4. Quit                   *\n";
@@ -117,7 +118,8 @@ void userInt(int *intInput)
  * @brief Ask if user wants to fill matrix A or matrix B, then fill
  * the corresponding matrix.
  * 
- * Matrices are stored as 2D arrays of integers.
+ * Matrices are stored as pointers to an int array, where one int array
+ * is a single row.
  * 
  * @param matrixA A pointer to matrix A
  * @param matrixB A pointer to matrix B
@@ -157,7 +159,7 @@ void userMatrixChoice(char *inputChar)
     string input;
 
     cin >> input;
-    cin.ignore();
+    // cin.ignore();
 
     // return if input is not 1 char long OR is not a valid character
     if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
@@ -180,7 +182,24 @@ void fillMatrix(int *matrix[])
     using std::cout;
 
     int height, width;
+
     getDimensions(&height, &width);
+    cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
+
+    // Fill the matrix one row at a time.
+    for (int row = 0; row < height; ++row)
+    {
+        // Continually ask for user input until the current row is filled with integers.
+        while (*(matrix + row) == NULL) 
+        {
+            cout << "Row " << row + 1 << ": ";
+            fillRow(*(matrix + row), width);
+            if (*(matrix + row) == NULL) 
+            {
+                cout << "\nPlease enter valid inputs.\n";
+            }
+        }
+    }
 }
 
 /**
@@ -198,6 +217,59 @@ void getDimensions(int *height, int *width)
 
     cout << "Width: ";
     userInt(width);
+}
+
+/**
+ * @brief Get user input and check that all inputs are integers and that there is the
+ * correct number of inputs. 
+ * 
+ * @param[out] row The int array to fill
+ * @param maxIndex The width of the matrix
+ */
+void fillRow(int row[], int maxIndex) 
+{
+    using std::cin;
+    using std::cout; // TODO: delete
+    using std::vector;
+
+    string input;
+    vector<int> tokens;
+
+    // Clear any remaining whitespace from the input buffer.
+    cin.ignore();
+    getline(cin, input);
+
+    // Set tokenStart to the first number in input.
+    char *tokenStart = strtok((char *)input.c_str(), " ");
+
+    for (int i = 0; i < maxIndex; ++i)
+    {
+        // If input is not a number, set row to NULL and return.
+        if (!isNumber((string)tokenStart))
+        {
+            row = NULL;
+            return;
+        }
+        // Otherwise, set element in row to int version of input.
+        row[i] = stoi((string)tokenStart);
+    }
+
+    // If there are not enough numbers in input, set row to NULL and return.
+    if (row[maxIndex - 1] == NULL)
+    {
+        row = NULL;
+        return;
+    }
+
+    // for (char *tokenStart = strtok((char *)input.c_str(), " "); tokenStart != NULL; tokenStart = strtok(NULL, " "))
+    // {
+    //     if (!isNumber((string)tokenStart))
+    //     {
+    //         row = NULL;
+    //         return;
+    //     }
+    //     tokens.push_back(stoi((string)tokenStart));
+    // }
 }
 
 void transposeMatrix()
