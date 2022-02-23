@@ -8,6 +8,8 @@
  * of MxN matrices.
  *
  * Matrices are stored as std::array<std::array<int, width>, height>
+ * 
+ * Compile using 'g++ -std=c++11 Lau-Natalie.cc -o Lau-Natalie && ./Lau-Natalie'
  *
  * @version 0.1
  *
@@ -38,6 +40,7 @@ void transposeMatrix(matrix);
 void multiplyMatrices();
 bool isNumber(string);
 bool checkChar(char);
+void printMatrix(matrix);
 
 int main()
 {
@@ -85,6 +88,12 @@ int main()
         multiplyMatrices();
         break;
     case 4:
+    {
+        char matrixChoice = userMatrixChoice();
+        printMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+        break;
+    }
+    case 5:
         cout << "\nBye!\n";
         return 0;
     }
@@ -100,7 +109,8 @@ void printMenu()
     cout << "*  1. Input matrix           *\n";
     cout << "*  2. Transpose matrix       *\n";
     cout << "*  3. Matrix multiplication  *\n"; // TODO: ask order, store?
-    cout << "*  4. Quit                   *\n";
+    cout << "*  4. Print matrix           *\n";
+    cout << "*  5. Quit                   *\n"; 
     cout << "******************************\n\n";
 }
 
@@ -157,7 +167,7 @@ char userMatrixChoice()
     {
         cout << "\nWould you like to input matrix A or B?\n";
         matrixChoice = userChar();
-        if (matrixChoice = '\0')
+        if (matrixChoice == '\0')
         {
             cout << "Please enter a valid input.\n";
         }
@@ -279,4 +289,21 @@ bool isNumber(string str)
 bool checkChar(char c)
 {
     return !isdigit(c);
+}
+
+void printMatrix(matrix print)
+{
+    if (print.empty())
+    {
+        cout << "Error: matrix has not been input.\n";
+        return;
+    }
+
+    for (vector<int> row : print)
+    {
+        for (int num : row)
+        {
+            cout << num << " ";
+        }
+    }
 }
