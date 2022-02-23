@@ -26,9 +26,9 @@ void printMenu();
 void userInt(int *);
 void matrixInput(int *[], int *[]);
 void userMatrixChoice(char *);
-void fillMatrix(int **);
+int ** fillMatrix();
 void getDimensions(int *, int *);
-void fillRow(int[], int);
+int * fillRow(int);
 void transposeMatrix();
 void multiplyMatrices();
 bool isNumber(string);
@@ -140,7 +140,13 @@ void matrixInput(int *matrixA[], int *matrixB[])
         }
     }
 
-    fillMatrix(matrix == 'A' ? matrixA : matrixB);
+    if (matrix == 'A') 
+    {
+        matrixA = fillMatrix();
+    } else
+    {
+        matrixB = fillMatrix();
+    }
 }
 
 /**
@@ -174,7 +180,7 @@ void userMatrixChoice(char *inputChar)
  *
  * @param[out] matrix A pointer to the matrix
  */
-void fillMatrix(int **matrix)
+int ** fillMatrix()
 {
     using std::cout;
 
@@ -182,7 +188,7 @@ void fillMatrix(int **matrix)
 
     // Set dimensions of 2D array that represents the matrix.
     getDimensions(&height, &width);
-    int rows[height][width];
+    int **rows = (int **)malloc(sizeof(int *));
     // matrix = new int *[height];
     // *matrix = new int[width];
 
@@ -191,19 +197,20 @@ void fillMatrix(int **matrix)
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
-        int *row = NULL;
+        *(rows + rowIndex) = (int *)malloc(sizeof(int));
+        *(rows + rowIndex) = NULL;
         // Continually ask for user input until the current row is correctly filled with integers.
-        while (row == NULL)
+        while (*(rows + rowIndex) == NULL)
         {
             cout << "Row " << rowIndex + 1 << ": ";
-            fillRow(row, width);
-            if (row == NULL)
+            *(rows + rowIndex) = fillRow(width);
+            if (*(rows + rowIndex) == NULL)
             {
                 cout << "\nPlease enter valid inputs.\n";
             }
         }
     }
-    matrix = (int **)rows;
+    // matrix = (int **)rows;
 }
 
 /**
@@ -232,12 +239,12 @@ void getDimensions(int *height, int *width)
  * @param[out] row The int array to fill
  * @param maxIndex The width of the matrix
  */
-void fillRow(int *row, int maxIndex)
+int * fillRow(int maxIndex)
 {
     using std::cin;
 
     string input;
-    int newRow[maxIndex];
+    int *newRow = (int *)malloc(sizeof(int));
 
     // Clear any remaining whitespace from the input buffer.
     cin.ignore();
@@ -248,17 +255,17 @@ void fillRow(int *row, int maxIndex)
 
     for (int i = 0; i < maxIndex; ++i)
     {
-        // If there are not enough numbers in input or input is not a number, return.
+        // If there are not enough numbers in input or input is not a number, free int array and return.
         if (tokenStart == NULL || !isNumber((string)tokenStart))
         {
+            free(newRow);
             return;
         }
 
         // Otherwise, set element in row to int version of input.
-        newRow[i] = stoi((string)tokenStart);
+        *(newRow + i) = stoi((string)tokenStart);
     }
-
-    row = &newRow[0];
+    return newRow;
 }
 
 void transposeMatrix()
