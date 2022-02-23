@@ -17,18 +17,18 @@
 // store as 2d arrays, pass as pointers to those objects
 
 #include <iostream>
-#include <ctype.h>
+#include <array>
 
 using namespace std;
 
 // Prototypes
 void printMenu();
 void userInt(int *);
-void matrixInput(int *[], int *[]);
+void matrixInput(int **, int **);
 void userMatrixChoice(char *);
-int ** fillMatrix();
+int **fillMatrix();
 void getDimensions(int *, int *);
-int * fillRow(int);
+int *fillRow(int);
 void transposeMatrix();
 void multiplyMatrices();
 bool isNumber(string);
@@ -54,7 +54,16 @@ int main()
     switch (input)
     {
     case 1:
-        matrixInput(matrixA, matrixB);
+        char matrix = userMatrixChoice();
+
+        if (matrix == 'A')
+        {
+            matrixA = fillMatrix();
+        }
+        else
+        {
+            matrixB = fillMatrix();
+        }
         break;
     case 2:
         transposeMatrix();
@@ -106,16 +115,32 @@ void userInt(int *intInput) // TODO: make this return an int instead of pointing
 }
 
 /**
- * @brief Ask if user wants to fill matrix A or matrix B, then fill
- * the corresponding matrix.
+ * @brief Get and error check user input. If the input is not
+ * either the character 'A' or 'B', return NULL character.
  *
- * Matrices are stored as pointers to an int array, where one int array
- * is a single row.
- *
- * @param matrixA A pointer to matrix A
- * @param matrixB A pointer to matrix B
+ * @return The user input character, NULL char if input is invalid
  */
-void matrixInput(int *matrixA[], int *matrixB[])
+char userChar()
+{
+    string input;
+
+    cin >> input;
+
+    // Return null char if input is not 1 char long OR is not a valid character.
+    if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
+    {
+        return '\0';
+    }
+
+    return toupper(input[0]);
+}
+
+/**
+ * @brief Return whether user wants to fill matrix A or matrix B.
+ *
+ * @return 'A' for matrixA, 'B' for matrixB
+ */
+char userMatrixChoice()
 {
     char matrix = '\0';
 
@@ -131,45 +156,19 @@ void matrixInput(int *matrixA[], int *matrixB[])
         }
     }
 
-    if (matrix == 'A') 
-    {
-        matrixA = fillMatrix();
-    } else
-    {
-        matrixB = fillMatrix();
-    }
-}
-
-/**
- * @brief Get and error check user input. If the input is not
- * either the character 'A' or 'B', set the output parameter
- * to the NULL character.
- *
- * @param[out] inputChar A pointer to the user input character
- */
-void userMatrixChoice(char *inputChar)
-{
-    string input;
-
-    cin >> input;
-
-    // return if input is not 1 char long OR is not a valid character
-    if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
-    {
-        *inputChar = '\0';
-        return;
-    }
-
-    *inputChar = toupper(input[0]);
+    return matrix;
 }
 
 /**
  * @brief Set the dimensions of the matrix based on user
  * input, then fill with integers based on user input.
  *
+ * Matrices are stored as pointers to an int array, where one int array
+ * is a single row.
+ *
  * @return A 2D array that represents the matrix
  */
-int ** fillMatrix()
+int **fillMatrix()
 {
     int height, width;
 
@@ -184,7 +183,7 @@ int ** fillMatrix()
     {
         *(rows + rowIndex) = (int *)malloc(sizeof(int));
         *(rows + rowIndex) = NULL;
-        
+
         // Continually ask for user input until the current row is correctly filled with integers.
         while (*(rows + rowIndex) == NULL)
         {
@@ -222,10 +221,10 @@ void getDimensions(int *height, int *width)
  * If input is valid, fill incoming int array with user input.
  *
  * @param maxIndex The width of the matrix
- * 
+ *
  * @return An int array representing a single row of the matrix
  */
-int * fillRow(int maxIndex)
+int *fillRow(int maxIndex)
 {
     string input;
     int *newRow = (int *)malloc(sizeof(int));
