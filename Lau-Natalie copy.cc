@@ -28,7 +28,7 @@ typedef vector<vector<int> > matrix;
 
 // Prototypes
 void printMenu();
-void userInt(int *);
+int userInt();
 void matrixInput(int **, int **);
 char userMatrixChoice();
 matrix fillMatrix(int, int);
@@ -48,7 +48,7 @@ int main()
     // Continually ask for user input until input is an int from 1 to 4 (inclusive)
     while (input < 1 || input > 4)
     {
-        userInt(&input);
+        input = userInt();
         if (input < 1 || input > 4)
         {
             cout << "Please enter a valid input.\n";
@@ -88,8 +88,6 @@ int main()
         cout << "\nBye!\n";
         return 0;
     }
-    // free(matrixA);
-    // free(matrixB);
 }
 
 /// Print the main menu of the program.
@@ -110,21 +108,17 @@ void printMenu()
  * @brief Get and error check user input. If the input is not an int,
  * set output parameter to 0.
  *
- * @param[out] intInput A pointer to the integer version of the user input
+ * @return The integer version of the user input
  */
-void userInt(int *intInput) // TODO: make this return an int instead of pointing to it
+int userInt()
 {
     string input;
 
     cin >> input;
 
     // return if input is not an int
-    if (!isNumber(input))
-    {
-        *intInput = 0;
-        return;
-    }
-    *intInput = stoi(input);
+    if (!isNumber(input)) { return 0; }
+    return stoi(input);
 }
 
 /**
@@ -219,10 +213,10 @@ matrix fillMatrix(int height, int width)
 void getDimensions(int *height, int *width)
 {
     cout << "\nHeight: ";
-    userInt(height);
+    *height = userInt();
 
     cout << "Width: ";
-    userInt(width);
+   *width = userInt();
 }
 
 /**
