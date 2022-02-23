@@ -43,6 +43,7 @@ int main()
 {
     int input;
     matrix matrixA, matrixB;
+    char matrixChoice;
 
     while (1)
     {
@@ -63,7 +64,7 @@ int main()
         {
         case 1:
         {
-            char matrixChoice = userMatrixChoice();
+            matrixChoice = userMatrixChoice();
             int height, width;
             getDimensions(&height, &width);
 
@@ -79,7 +80,7 @@ int main()
         }
         case 2:
         {
-            char matrixChoice = userMatrixChoice();
+            matrixChoice = userMatrixChoice();
             transposeMatrix(matrixChoice == 'A' ? &matrixA : &matrixB);
             break;
         }
@@ -165,8 +166,9 @@ char userMatrixChoice()
     // A valid input is one of the following: 'A', 'a', 'B', 'b'
     while (matrixChoice == '\0')
     {
-        cout << "\nPlease choose matrix A or B.\n"; // TODO: change to view/input
+        cout << "\nPlease choose matrix A or B.\n";
         matrixChoice = userChar();
+
         if (matrixChoice == '\0')
         {
             cout << "Please enter a valid input.\n";
@@ -279,10 +281,19 @@ void transposeMatrix(matrix *toTranspose)
 {
     if ((*toTranspose).empty())
     {
-        cout << "Error: matrix has not been input.\n";
         return;
     }
-    cout << "Matrix Transposition\n";
+    matrix transpose;
+    for (int row = 0; row < (*toTranspose)[0].size(); ++row)
+    {
+        vector<int> newRow;
+        for (int col = 0; col < (*toTranspose).size(); ++col)
+        {
+            newRow.push_back((*toTranspose)[col][row]); // TODO: found seg fault
+        }
+        transpose.push_back(newRow);
+    }
+    *toTranspose = transpose;
 }
 
 void multiplyMatrices()
@@ -336,7 +347,7 @@ void printMatrix(matrix print)
         cout << "\t";
         for (int num : row)
         {
-            cout << num << "\t\t";
+            cout << num << "\t";
         }
         cout << "\n";
     }
