@@ -23,15 +23,18 @@
 
 using namespace std;
 
+// A matrix is represented by a vector of integer vectors.
+typedef vector<vector<int> > matrix;
+
 // Prototypes
 void printMenu();
 void userInt(int *);
 void matrixInput(int **, int **);
 char userMatrixChoice();
-vector<vector<int> > fillMatrix(int, int);
+matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
-void transposeMatrix(vector<vector<int> >);
+void transposeMatrix(matrix);
 void multiplyMatrices();
 bool isNumber(string);
 bool checkChar(char);
@@ -39,7 +42,7 @@ bool checkChar(char);
 int main()
 {
     int input = 0;
-    vector<vector<int> > matrixA, matrixB;
+    matrix matrixA, matrixB;
 
     printMenu();
     // Continually ask for user input until input is an int from 1 to 4 (inclusive)
@@ -57,11 +60,11 @@ int main()
     {
     case 1:
     {
-        char matrix = userMatrixChoice();
+        char matrixChoice = userMatrixChoice();
         int height, width;
         getDimensions(&height, &width);
 
-        if (matrix == 'A')
+        if (matrixChoice == 'A')
         {
             matrixA = fillMatrix(height, width);
         }
@@ -73,9 +76,9 @@ int main()
     }
     case 2:
     {
-        char matrix = userMatrixChoice();
+        char matrixChoice = userMatrixChoice();
         // matrixA.empty() returns 1 if empty
-        transposeMatrix(matrix == 'A' ? matrixA : matrixB);
+        transposeMatrix(matrixChoice == 'A' ? matrixA : matrixB);
         break;
     }
     case 3:
@@ -152,21 +155,21 @@ char userChar()
  */
 char userMatrixChoice()
 {
-    char matrix = '\0';
+    char matrixChoice = '\0';
 
     // Continually ask for user input until a valid input is given.
     // A valid input is one of the following: 'A', 'a', 'B', 'b'
-    while (matrix == '\0')
+    while (matrixChoice == '\0')
     {
         cout << "\nWould you like to input matrix A or B?\n";
-        matrix = userChar();
-        if (matrix == '\0')
+        matrixChoice = userChar();
+        if (matrixChoice = '\0')
         {
             cout << "Please enter a valid input.\n";
         }
     }
 
-    return matrix;
+    return matrixChoice;
 }
 
 /**
@@ -181,9 +184,9 @@ char userMatrixChoice()
  *
  * @return A 2D array that represents the matrix
  */
-vector<vector<int> > fillMatrix(int height, int width)
+matrix fillMatrix(int height, int width)
 {
-    vector<vector<int> > matrix;
+    matrix toFill;
 
     cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
 
@@ -202,9 +205,9 @@ vector<vector<int> > fillMatrix(int height, int width)
                 cout << "\nPlease enter valid inputs.\n";
             }
         }
-        matrix.push_back(row);
+        toFill.push_back(row);
     }
-    return matrix;
+    return toFill;
 }
 
 /**
@@ -264,7 +267,7 @@ vector<int> fillRow(int maxIndex)
     return newRow;
 }
 
-void transposeMatrix(vector<vector<int> > matrix)
+void transposeMatrix(matrix toTranspose)
 {
     cout << "Matrix Transposition\n";
 }
