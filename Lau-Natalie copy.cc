@@ -178,7 +178,7 @@ void userMatrixChoice(char *inputChar)
  * @brief Set the dimensions of the matrix based on user
  * input, then fill with integers based on user input.
  *
- * @param[out] matrix A pointer to the matrix
+ * @return A 2D array that represents the matrix
  */
 int ** fillMatrix()
 {
@@ -211,6 +211,7 @@ int ** fillMatrix()
         }
     }
     // matrix = (int **)rows;
+    return NULL;
 }
 
 /**
@@ -236,34 +237,47 @@ void getDimensions(int *height, int *width)
  *
  * If input is valid, fill incoming int array with user input.
  *
- * @param[out] row The int array to fill
  * @param maxIndex The width of the matrix
+ * 
+ * @return An int array representing a single row of the matrix
  */
 int * fillRow(int maxIndex)
 {
     using std::cin;
+    using std::cout; // TODO: delete
 
     string input;
     int *newRow = (int *)malloc(sizeof(int));
 
     // Clear any remaining whitespace from the input buffer.
-    cin.ignore();
+    cin.clear();
     getline(cin, input);
+
+    cout << input << "\n";
 
     // Set tokenStart to the first number in input.
     char *tokenStart = strtok((char *)input.c_str(), " ");
 
-    for (int i = 0; i < maxIndex; ++i)
+    int i = 0;
+    while (tokenStart != NULL)
     {
-        // If there are not enough numbers in input or input is not a number, free int array and return.
-        if (tokenStart == NULL || !isNumber((string)tokenStart))
+        // If input is not a number, free int array and return.
+        if (!isNumber((string)tokenStart))
         {
             free(newRow);
-            return;
+            return NULL;
         }
 
-        // Otherwise, set element in row to int version of input.
         *(newRow + i) = stoi((string)tokenStart);
+        ++i;
+        tokenStart = strtok(NULL, " ");
+    }
+
+    // If there is the wrong number of inputs, free int array and return.
+    if (i != maxIndex)
+    {
+        free(newRow);
+        return NULL;
     }
     return newRow;
 }
