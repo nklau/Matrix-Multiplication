@@ -34,7 +34,8 @@ matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
 void transposeMatrix(matrix *);
-void multiplyMatrices();
+int determineOrder(matrix, matrix);
+void multiplyMatrices(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
@@ -85,8 +86,21 @@ int main()
             break;
         }
         case 3:
-            multiplyMatrices();
+        {
+            if (matrixA.empty() || matrixB.empty())
+            {
+                cout << "Error: please input both matrices.\n";
+                break;
+            }
+            int aBeforeB = determineOrder(matrixA, matrixB);
+            if (aBeforeB == 0)
+            {
+                cout << "Error: matrices are not compatible for multiplication.\n";
+                break;
+            }
+            multiplyMatrices(aBeforeB ? matrixA : matrixB, aBeforeB ? matrixB : matrixA);
             break;
+        }
         case 4:
         {
             char matrixChoice = userMatrixChoice();
@@ -296,7 +310,48 @@ void transposeMatrix(matrix *toTranspose)
     *toTranspose = transpose;
 }
 
-void multiplyMatrices()
+/**
+ * @brief Determine which order of the two matrices would result in
+ * a valid order for matrix multiplication.
+ * 
+ * The width of the first matrix must equal the height of the
+ * second, and the height of the first must equal the width of the
+ * second.
+ * 
+ * If multiplication order is first x second, return 1.
+ * If multiplication order is second x first, return -1.
+ * If neither is valid, return 0.
+ * 
+ * @param first The first matrix to consider as an operand
+ * @param second The second matrix to consider as an operand
+ * @return an int from -1 to 1 (inclusive)
+ */
+int determineOrder(matrix first, matrix second)
+{
+    int firstHeight = first.size(), firstWidth = first[0].size();
+    int secondHeight = second.size(), secondWidth = second[0].size();
+
+    if (firstWidth == secondHeight && firstHeight == secondWidth)
+    {
+        return 1;
+    }
+
+    if (secondWidth == firstHeight && secondHeight == firstWidth)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+/**
+ * @brief Multiply the two matrices together in whichever order is
+ * valid. 
+ * 
+ * @param first The first matrix operand
+ * @param second The second matrix operand
+ */
+void multiplyMatrices(matrix first, matrix second)
 {
     cout << "Matrix Multiplication\n";
 }
