@@ -88,11 +88,11 @@ int main()
         }
         case 3:
         {
-            if (!isMultiplicationValid(matrixA, matrixB))
-            {
-                cout << "Error: matrices are not compatible for multiplication.\n";
-                break;
-            }
+            // if (!isMultiplicationValid(matrixA, matrixB))
+            // {
+            //     cout << "Error: matrices are not compatible for multiplication.\n";
+            //     break;
+            // }
             printMultiplyMenu();
             int bBeforeA = 0;
             while (bBeforeA < 1 || bBeforeA > 3)
@@ -109,6 +109,11 @@ int main()
                 break;
             }
             --bBeforeA;
+            if (!isMultiplicationValid(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB))
+            {
+                cout << "Error: matrices are not compatible for multiplication.\n";
+                break;
+            }
             matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
             printMatrix(product);
             break;
@@ -340,7 +345,6 @@ void transposeMatrix(matrix *toTranspose)
  * multiplied together.
  * 
  * The width of the first matrix must equal the height of the
- * second, and the height of the first must equal the width of the
  * second.
  * 
  * @param first The first matrix to consider as an operand
@@ -349,7 +353,7 @@ void transposeMatrix(matrix *toTranspose)
  */
 bool isMultiplicationValid(matrix first, matrix second)
 {
-    return (first[0].size() == second.size() && first.size() == second[0].size());
+    return (first[0].size() == second.size());
 }
 
 /**
@@ -363,9 +367,7 @@ bool isMultiplicationValid(matrix first, matrix second)
 matrix multiplyMatrices(matrix first, matrix second)
 {
     matrix product;
-    cout << "Matrix Multiplication\n";
-    printMatrix(first);
-    printMatrix(second);
+
     return product;
 }
 
