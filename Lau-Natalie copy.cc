@@ -19,7 +19,7 @@
 #include <iostream>
 #include <ctype.h>
 
-using std::string;
+using namespace std;
 
 // Prototypes
 void printMenu();
@@ -36,8 +36,6 @@ bool checkChar(char);
 
 int main()
 {
-    using std::cout;
-
     int input = 0;
     int **matrixA, **matrixB; // TODO: change
 
@@ -75,8 +73,6 @@ int main()
 /// Print the main menu of the program.
 void printMenu()
 {
-    using std::cout;
-
     cout << "\n******************************\n";
     cout << "*   Linear Algebra Library   *\n";
     cout << "******************************\n";
@@ -96,9 +92,6 @@ void printMenu()
  */
 void userInt(int *intInput) // TODO: make this return an int instead of pointing to it
 {
-    using std::cin;
-    using std::stoi;
-
     string input;
 
     cin >> input;
@@ -124,8 +117,6 @@ void userInt(int *intInput) // TODO: make this return an int instead of pointing
  */
 void matrixInput(int *matrixA[], int *matrixB[])
 {
-    using std::cout;
-
     char matrix = '\0';
 
     // Continually ask for user input until a valid input is given.
@@ -158,8 +149,6 @@ void matrixInput(int *matrixA[], int *matrixB[])
  */
 void userMatrixChoice(char *inputChar)
 {
-    using std::cin;
-
     string input;
 
     cin >> input;
@@ -182,15 +171,11 @@ void userMatrixChoice(char *inputChar)
  */
 int ** fillMatrix()
 {
-    using std::cout;
-
     int height, width;
 
     // Set dimensions of 2D array that represents the matrix.
     getDimensions(&height, &width);
     int **rows = (int **)malloc(sizeof(int *));
-    // matrix = new int *[height];
-    // *matrix = new int[width];
 
     cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
 
@@ -199,6 +184,7 @@ int ** fillMatrix()
     {
         *(rows + rowIndex) = (int *)malloc(sizeof(int));
         *(rows + rowIndex) = NULL;
+        
         // Continually ask for user input until the current row is correctly filled with integers.
         while (*(rows + rowIndex) == NULL)
         {
@@ -222,8 +208,6 @@ int ** fillMatrix()
  */
 void getDimensions(int *height, int *width)
 {
-    using std::cout;
-
     cout << "\nHeight: ";
     userInt(height);
 
@@ -243,9 +227,6 @@ void getDimensions(int *height, int *width)
  */
 int * fillRow(int maxIndex)
 {
-    using std::cin;
-    using std::cout; // TODO: delete
-
     string input;
     int *newRow = (int *)malloc(sizeof(int));
 
@@ -284,22 +265,16 @@ int * fillRow(int maxIndex)
 
 void transposeMatrix()
 {
-    using std::cout;
-
     cout << "Matrix Transposition\n";
 }
 
 void multiplyMatrices()
 {
-    using std::cout;
-
     cout << "Matrix Multiplication\n";
 }
 
 bool isNumber(string str)
 {
-    using std::find_if;
-
     return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
 }
 
