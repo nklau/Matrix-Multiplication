@@ -44,58 +44,62 @@ void printMatrix(matrix);
 
 int main()
 {
-    int input = 0;
+    int input;
     matrix matrixA, matrixB;
 
-    printMenu();
-    // Continually ask for user input until input is an int from 1 to 4 (inclusive)
-    while (input < 1 || input > 4)
+    while (1)
     {
-        input = userInt();
-        if (input < 1 || input > 4)
+        input = 0;
+        printMenu();
+        // Continually ask for user input until input is an int from 1 to 4 (inclusive)
+        while (input < 1 || input > 5)
         {
-            cout << "Please enter a valid input.\n";
-            printMenu();
+            input = userInt();
+            if (input < 1 || input > 5)
+            {
+                cout << "Please enter a valid input.\n";
+                printMenu();
+            }
         }
-    }
 
-    switch (input)
-    {
-    case 1:
-    {
-        char matrixChoice = userMatrixChoice();
-        int height, width;
-        getDimensions(&height, &width);
+        switch (input)
+        {
+        case 1:
+        {
+            char matrixChoice = userMatrixChoice();
+            int height, width;
+            getDimensions(&height, &width);
 
-        if (matrixChoice == 'A')
-        {
-            matrixA = fillMatrix(height, width);
+            if (matrixChoice == 'A')
+            {
+                matrixA = fillMatrix(height, width);
+            }
+            else
+            {
+                matrixB = fillMatrix(height, width);
+            }
+            break;
         }
-        else
+        case 2:
         {
-            matrixB = fillMatrix(height, width);
+            char matrixChoice = userMatrixChoice();
+            // matrixA.empty() returns 1 if empty
+            transposeMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+            break;
         }
-        break;
-    }
-    case 2:
-    {
-        char matrixChoice = userMatrixChoice();
-        // matrixA.empty() returns 1 if empty
-        transposeMatrix(matrixChoice == 'A' ? matrixA : matrixB);
-        break;
-    }
-    case 3:
-        multiplyMatrices();
-        break;
-    case 4:
-    {
-        char matrixChoice = userMatrixChoice();
-        printMatrix(matrixChoice == 'A' ? matrixA : matrixB);
-        break;
-    }
-    case 5:
-        cout << "\nBye!\n";
-        return 0;
+        case 3:
+            multiplyMatrices();
+            break;
+        case 4:
+        {
+            char matrixChoice = userMatrixChoice();
+            printMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+            break;
+        }
+        case 5:
+            cout << "\nBye!\n";
+            return 0;
+        }
     }
 }
 
@@ -165,7 +169,7 @@ char userMatrixChoice()
     // A valid input is one of the following: 'A', 'a', 'B', 'b'
     while (matrixChoice == '\0')
     {
-        cout << "\nWould you like to input matrix A or B?\n";
+        cout << "\nPlease choose matrix A or B.\n"; // TODO: change to view/input
         matrixChoice = userChar();
         if (matrixChoice == '\0')
         {
@@ -283,6 +287,10 @@ void multiplyMatrices()
 
 bool isNumber(string str)
 {
+    if (str[0] == '-')
+    {
+        str = str.substr(1);
+    }
     return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
 }
 
@@ -303,7 +311,8 @@ void printMatrix(matrix print)
     {
         for (int num : row)
         {
-            cout << num << " ";
+            cout << num << "\t\t";
         }
+        cout << "\n";
     }
 }
