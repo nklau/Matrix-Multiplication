@@ -17,9 +17,6 @@
  *
  */
 
-// TODO LIST: change matrices to pointers to 2d arrays
-// store as 2d arrays, pass as pointers to those objects
-
 #include <iostream>
 #include <vector>
 
@@ -27,6 +24,7 @@ using namespace std;
 
 // A matrix is represented by a vector of integer vectors.
 typedef vector<vector<int> > matrix;
+typedef vector<vector<int> > *matrixPtr;
 
 // Prototypes
 void printMenu();
@@ -36,7 +34,7 @@ char userMatrixChoice();
 matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
-void transposeMatrix(matrix);
+void transposeMatrix(matrixPtr);
 void multiplyMatrices();
 bool isNumber(string);
 bool checkChar(char);
@@ -51,7 +49,7 @@ int main()
     {
         input = 0;
         printMenu();
-        // Continually ask for user input until input is an int from 1 to 4 (inclusive)
+        // Continually ask for user input until input is an int from 1 to 5 (inclusive)
         while (input < 1 || input > 5)
         {
             input = userInt();
@@ -83,8 +81,7 @@ int main()
         case 2:
         {
             char matrixChoice = userMatrixChoice();
-            // matrixA.empty() returns 1 if empty
-            transposeMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+            transposeMatrix(matrixChoice == 'A' ? &matrixA : &matrixB);
             break;
         }
         case 3:
@@ -252,8 +249,6 @@ vector<int> fillRow(int maxIndex)
     cin.clear();
     getline(cin, input);
 
-    cout << input << "\n";  // TODO: delete
-
     // Set tokenStart to the first number in input.
     char *tokenStart = strtok((char *)input.c_str(), " ");
 
@@ -275,7 +270,13 @@ vector<int> fillRow(int maxIndex)
     return newRow;
 }
 
-void transposeMatrix(matrix toTranspose)
+/**
+ * @brief Transpose the incoming matrix (by switching the rows
+ * with the columns).
+ * 
+ * @param[out] toTranspose The matrix to transpose
+ */
+void transposeMatrix(matrixPtr toTranspose)
 {
     cout << "Matrix Transposition\n";
 }
@@ -285,8 +286,15 @@ void multiplyMatrices()
     cout << "Matrix Multiplication\n";
 }
 
+/**
+ * @brief Return true if incoming string is an integer.
+ * 
+ * @param str The string to check
+ * @return true if str is an int, false otherwise
+ */
 bool isNumber(string str)
 {
+    // Allow for negative numbers.
     if (str[0] == '-')
     {
         str = str.substr(1);
@@ -294,11 +302,23 @@ bool isNumber(string str)
     return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
 }
 
+/**
+ * @brief Check if the incoming character is a digit.
+ * 
+ * @param c The char to check
+ * @return true if c is an int, false otherwise
+ */
 bool checkChar(char c)
 {
     return !isdigit(c);
 }
 
+/**
+ * @brief Print the incoming matrix. Print an error message
+ * if the matrix is empty.
+ * 
+ * @param print The matrix to display
+ */
 void printMatrix(matrix print)
 {
     if (print.empty())
