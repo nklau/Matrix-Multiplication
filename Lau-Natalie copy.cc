@@ -7,6 +7,8 @@
  * @brief Computes matrix multiplication and matrix transposes
  * of MxN matrices.
  *
+ * Matrices are stored as std::array<std::array<int, width>, height>
+ *
  * @version 0.1
  *
  * @date 2022-02-18
@@ -17,7 +19,7 @@
 // store as 2d arrays, pass as pointers to those objects
 
 #include <iostream>
-#include <array>
+#include <vector>
 
 using namespace std;
 
@@ -26,9 +28,9 @@ void printMenu();
 void userInt(int *);
 void matrixInput(int **, int **);
 void userMatrixChoice(char *);
-int **fillMatrix();
+vector<vector<int> > fillMatrix(int, int);
 void getDimensions(int *, int *);
-int *fillRow(int);
+vector<int> fillRow(int);
 void transposeMatrix();
 void multiplyMatrices();
 bool isNumber(string);
@@ -37,7 +39,7 @@ bool checkChar(char);
 int main()
 {
     int input = 0;
-    int **matrixA, **matrixB; // TODO: change
+    vector<vector<int> > matrixA, matrixB;
 
     printMenu();
     // Continually ask for user input until input is an int from 1 to 4 (inclusive)
@@ -55,17 +57,20 @@ int main()
     {
     case 1:
         char matrix = userMatrixChoice();
+        int height, width;
+        getDimensions(&height, &width);
 
         if (matrix == 'A')
         {
-            matrixA = fillMatrix();
+            matrixA = fillMatrix(height, width);
         }
         else
         {
-            matrixB = fillMatrix();
+            matrixB = fillMatrix(height, width);
         }
         break;
     case 2:
+        // matrixA.empty() returns 1 if empty
         transposeMatrix();
         break;
     case 3:
@@ -163,40 +168,41 @@ char userMatrixChoice()
  * @brief Set the dimensions of the matrix based on user
  * input, then fill with integers based on user input.
  *
- * Matrices are stored as pointers to an int array, where one int array
- * is a single row.
+ * Matrices are stored as a vector of int vectors, where one
+ * vector<int> is a single row.
+ *
+ * @param height The number of rows in the matrix
+ * @param width The number of cols in the matrix
  *
  * @return A 2D array that represents the matrix
  */
-int **fillMatrix()
+vector<vector<int> > fillMatrix(int height, int width)
 {
-    int height, width;
-
     // Set dimensions of 2D array that represents the matrix.
-    getDimensions(&height, &width);
-    int **rows = (int **)malloc(sizeof(int *));
+    // int **rows = (int **)malloc(sizeof(int *));
+    vector<vector<int> > matrix;
 
     cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
 
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
-        *(rows + rowIndex) = (int *)malloc(sizeof(int));
-        *(rows + rowIndex) = NULL;
-
+        vector<int> row;
         // Continually ask for user input until the current row is correctly filled with integers.
-        while (*(rows + rowIndex) == NULL)
+        while (row.empty())
         {
             cout << "Row " << rowIndex + 1 << ": ";
-            *(rows + rowIndex) = fillRow(width);
-            if (*(rows + rowIndex) == NULL)
+            row = fillRow(width);
+
+            if (row.empty())
             {
                 cout << "\nPlease enter valid inputs.\n";
             }
         }
+        matrix.push_back(row);
     }
     // matrix = (int **)rows;
-    return NULL;
+    return matrix;
 }
 
 /**
@@ -224,41 +230,35 @@ void getDimensions(int *height, int *width)
  *
  * @return An int array representing a single row of the matrix
  */
-int *fillRow(int maxIndex)
+vector<int> fillRow(int maxIndex)
 {
     string input;
-    int *newRow = (int *)malloc(sizeof(int));
+    vector<int> newRow;
 
     // Clear any remaining whitespace from the input buffer.
     cin.clear();
     getline(cin, input);
 
-    cout << input << "\n";
+    cout << input << "\n";  // TODO: delete
 
     // Set tokenStart to the first number in input.
     char *tokenStart = strtok((char *)input.c_str(), " ");
 
-    int i = 0;
     while (tokenStart != NULL)
     {
-        // If input is not a number, free int array and return.
+        // If input is not a number, return an empty vector<int>.
         if (!isNumber((string)tokenStart))
         {
-            free(newRow);
-            return NULL;
+            newRow.clear();
+            return newRow;
         }
 
-        *(newRow + i) = stoi((string)tokenStart);
-        ++i;
+        newRow.push_back(stoi((string)tokenStart));
         tokenStart = strtok(NULL, " ");
     }
 
-    // If there is the wrong number of inputs, free int array and return.
-    if (i != maxIndex)
-    {
-        free(newRow);
-        return NULL;
-    }
+    // If there is the wrong number of inputs, return an empty vector<int>.
+    if (newRow.size() != maxIndex) { newRow.clear(); }
     return newRow;
 }
 
