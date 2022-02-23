@@ -277,6 +277,11 @@ vector<int> fillRow(int maxIndex)
  */
 void transposeMatrix(matrix *toTranspose)
 {
+    if ((*toTranspose).empty())
+    {
+        cout << "Error: matrix has not been input.\n";
+        return;
+    }
     cout << "Matrix Transposition\n";
 }
 
@@ -328,6 +333,7 @@ void printMatrix(matrix print)
 
     for (vector<int> row : print)
     {
+        cout << "\t";
         for (int num : row)
         {
             cout << num << "\t\t";
