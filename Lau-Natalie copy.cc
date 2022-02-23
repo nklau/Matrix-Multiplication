@@ -27,6 +27,7 @@ typedef vector<vector<int> > matrix;
 
 // Prototypes
 void printMenu();
+void printMultiplyMenu();
 int userInt();
 void matrixInput(int **, int **);
 char userMatrixChoice();
@@ -35,7 +36,7 @@ void getDimensions(int *, int *);
 vector<int> fillRow(int);
 void transposeMatrix(matrix *);
 bool isMultiplicationValid(matrix, matrix);
-void multiplyMatrices(matrix, matrix);
+matrix multiplyMatrices(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
@@ -92,7 +93,24 @@ int main()
                 cout << "Error: matrices are not compatible for multiplication.\n";
                 break;
             }
-            multiplyMatrices();
+            printMultiplyMenu();
+            int bBeforeA = 0;
+            while (bBeforeA < 1 || bBeforeA > 3)
+            {
+                bBeforeA = userInt();
+                if (bBeforeA < 1 || bBeforeA > 3)
+                {
+                    cout << "Please enter a valid input.\n";
+                    printMultiplyMenu();
+                }
+            }
+            if (bBeforeA == 3)
+            {
+                break;
+            }
+            --bBeforeA;
+            matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
+            printMatrix(product);
             break;
         }
         case 4:
@@ -117,9 +135,22 @@ void printMenu()
     cout << "*  Please choose an option.  *\n";
     cout << "*  1. Input matrix           *\n";
     cout << "*  2. Transpose matrix       *\n";
-    cout << "*  3. Matrix multiplication  *\n"; // TODO: ask order, store?
+    cout << "*  3. Matrix multiplication  *\n";
     cout << "*  4. Print matrix           *\n";
     cout << "*  5. Quit                   *\n"; 
+    cout << "******************************\n\n";
+}
+
+/// Print the multiply menu of the program.
+void printMultiplyMenu()
+{
+    cout << "\n******************************\n";
+    cout << "*    Matrix Multiplication   *\n";
+    cout << "******************************\n";
+    cout << "*    Please choose order.    *\n";
+    cout << "*    1. A x B                *\n";
+    cout << "*    2. B x A                *\n";
+    cout << "*    3. Back                 *\n";
     cout << "******************************\n\n";
 }
 
@@ -322,18 +353,20 @@ bool isMultiplicationValid(matrix first, matrix second)
 }
 
 /**
- * @brief Multiply the two matrices together in whichever order is
- * valid. 
+ * @brief Multiply the two matrices together.
  * 
  * @param first The first matrix operand
  * @param second The second matrix operand
+ * 
+ * @return The product of the two matrices
  */
-void multiplyMatrices(matrix first, matrix second)
+matrix multiplyMatrices(matrix first, matrix second)
 {
+    matrix product;
     cout << "Matrix Multiplication\n";
     printMatrix(first);
-    cout << "\n";
     printMatrix(second);
+    return product;
 }
 
 /**
