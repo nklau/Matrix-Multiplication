@@ -34,7 +34,7 @@ matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
 void transposeMatrix(matrix *);
-int determineOrder(matrix, matrix);
+bool isMultiplicationValid(matrix, matrix);
 void multiplyMatrices(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
@@ -87,18 +87,12 @@ int main()
         }
         case 3:
         {
-            if (matrixA.empty() || matrixB.empty())
-            {
-                cout << "Error: please input both matrices.\n";
-                break;
-            }
-            int aBeforeB = determineOrder(matrixA, matrixB);
-            if (aBeforeB == 0)
+            if (!isMultiplicationValid(matrixA, matrixB))
             {
                 cout << "Error: matrices are not compatible for multiplication.\n";
                 break;
             }
-            multiplyMatrices(aBeforeB ? matrixA : matrixB, aBeforeB ? matrixB : matrixA);
+            multiplyMatrices();
             break;
         }
         case 4:
@@ -311,37 +305,20 @@ void transposeMatrix(matrix *toTranspose)
 }
 
 /**
- * @brief Determine which order of the two matrices would result in
- * a valid order for matrix multiplication.
+ * @brief Determine if the two incoming matrices can be 
+ * multiplied together.
  * 
  * The width of the first matrix must equal the height of the
  * second, and the height of the first must equal the width of the
  * second.
  * 
- * If multiplication order is first x second, return 1.
- * If multiplication order is second x first, return -1.
- * If neither is valid, return 0.
- * 
  * @param first The first matrix to consider as an operand
  * @param second The second matrix to consider as an operand
- * @return an int from -1 to 1 (inclusive)
+ * @return true if the matrices can be multiplied, false otherwise
  */
-int determineOrder(matrix first, matrix second)
+bool isMultiplicationValid(matrix first, matrix second)
 {
-    int firstHeight = first.size(), firstWidth = first[0].size();
-    int secondHeight = second.size(), secondWidth = second[0].size();
-
-    if (firstWidth == secondHeight && firstHeight == secondWidth)
-    {
-        return 1;
-    }
-
-    if (secondWidth == firstHeight && secondHeight == firstWidth)
-    {
-        return -1;
-    }
-
-    return 0;
+    return (first[0].size() == second.size() && first.size() == second[0].size());
 }
 
 /**
@@ -354,6 +331,9 @@ int determineOrder(matrix first, matrix second)
 void multiplyMatrices(matrix first, matrix second)
 {
     cout << "Matrix Multiplication\n";
+    printMatrix(first);
+    cout << "\n";
+    printMatrix(second);
 }
 
 /**
