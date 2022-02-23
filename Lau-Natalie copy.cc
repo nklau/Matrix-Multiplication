@@ -24,7 +24,6 @@ using namespace std;
 
 // A matrix is represented by a vector of integer vectors.
 typedef vector<vector<int> > matrix;
-typedef vector<vector<int> > *matrixPtr;
 
 // Prototypes
 void printMenu();
@@ -34,7 +33,7 @@ char userMatrixChoice();
 matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
-void transposeMatrix(matrixPtr);
+void transposeMatrix(matrix *);
 void multiplyMatrices();
 bool isNumber(string);
 bool checkChar(char);
@@ -276,7 +275,7 @@ vector<int> fillRow(int maxIndex)
  * 
  * @param[out] toTranspose The matrix to transpose
  */
-void transposeMatrix(matrixPtr toTranspose)
+void transposeMatrix(matrix *toTranspose)
 {
     cout << "Matrix Transposition\n";
 }
