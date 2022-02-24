@@ -111,15 +111,11 @@ int main()
             break;
         }
         case 3:
-        {
             multiplyUserInput(matrixA, matrixB);
             break;
-        }
         case 4:
-        {
             printMatrixUserInput(matrixA, matrixB);
             break;
-        }
         case 5:
             cout << "\nBye!\n";
             return 0;
@@ -166,7 +162,7 @@ void printTransposeMenu()
     cout << "*   Please choose a matrix.  *\n";
     cout << "*                            *\n";
     cout << "*    1. Transpose matrix A   *\n";
-    cout << "*    1. Transpose matrix B   *\n";
+    cout << "*    2. Transpose matrix B   *\n";
     cout << "*    3. Back                 *\n";
     cout << "******************************\n";
 }
@@ -194,7 +190,7 @@ void printMatrixMenu()
     cout << "*   Please choose a matrix.  *\n";
     cout << "*                            *\n";
     cout << "*    1. Print matrix A       *\n";
-    cout << "*    1. Print matrix B       *\n";
+    cout << "*    2. Print matrix B       *\n";
     cout << "*    3. Back                 *\n";
     cout << "******************************\n";
 }
