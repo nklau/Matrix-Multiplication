@@ -40,7 +40,7 @@ matrix multiplyMatrices(matrix, matrix);
 void printMatrix(matrix);
 
 // Helper functions
-void getDimensions(int *, int *);
+void setDimensions(int *, int *);
 matrixRow fillRow(int);
 int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
@@ -85,7 +85,7 @@ int main()
             if (input == 3) { break; }
 
             int height, width;
-            getDimensions(&height, &width);
+            setDimensions(&height, &width);
 
             if (input == 1) { matrixA = fillMatrix(height, width); }
             else { matrixB = fillMatrix(height, width); }
@@ -413,13 +413,23 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
  * @param[out] height A pointer to the integer representing the desired height of the matrix
  * @param[out] width A pointer to the integer representing the desired width of the matrix
  */
-void getDimensions(int *height, int *width)
+void setDimensions(int *height, int *width)
 {
     cout << "\nHeight: ";
     *height = userInt();
+    while (*height <= 0)
+    {
+        cout << "\nError: Please enter a positive number.\nHeight: ";
+        *height = userInt();
+    }
 
     cout << "Width: ";
    *width = userInt();
+   while (*width <= 0)
+   {
+       cout << "\nError: Please enter a positive number.\nWidth: ";
+       *width = userInt();
+   }
 }
 
 /**
