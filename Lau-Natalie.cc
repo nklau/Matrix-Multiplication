@@ -35,7 +35,7 @@ void printMatrixMenu();
 // Main functions
 matrix fillMatrix(int, int);
 matrix transposeMatrix(matrix);
-matrix multiplyMatrices(matrix, matrix);
+matrix calculateMultiplication(matrix, matrix);
 void printMatrix(matrix);
 
 // Helper functions
@@ -127,7 +127,7 @@ int main()
                 cout << "Error: matrices are not compatible for multiplication.\n";
                 break;
             }
-            matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
+            matrix product = calculateMultiplication(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
             printMatrix(product);
             break;
         }
@@ -227,44 +227,6 @@ void printMatrixMenu()
 }
 
 /**
- * @brief Get and error check user input. If the input is not an int,
- * set output parameter to 0.
- *
- * @return The integer version of the user input
- */
-int userInt()
-{
-    string input;
-
-    cin >> input;
-
-    // return if input is not an int
-    if (!isNumber(input)) { return 0; }
-    return stoi(input);
-}
-
-/**
- * @brief Get and error check user input. If the input is not
- * either the character 'A' or 'B', return NULL character.
- *
- * @return The user input character, NULL char if input is invalid
- */
-char userChar()
-{
-    string input;
-
-    cin >> input;
-
-    // Return null char if input is not 1 char long OR is not a valid character.
-    if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
-    {
-        return '\0';
-    }
-
-    return toupper(input[0]);
-}
-
-/**
  * @brief Set the dimensions of the matrix based on user
  * input, then fill with integers based on user input.
  *
@@ -303,18 +265,84 @@ matrix fillMatrix(int height, int width)
 }
 
 /**
- * @brief Set the height and width of the matrix.
- *
- * @param[out] height A pointer to the integer representing the desired height of the matrix
- * @param[out] width A pointer to the integer representing the desired width of the matrix
+ * @brief Transpose the incoming matrix (by switching the rows
+ * with the columns).
+ * 
+ * @param toTranspose The matrix to transpose
+ * 
+ * @return The transposed matrix
  */
-void getDimensions(int *height, int *width)
+matrix transposeMatrix(matrix toTranspose)
 {
-    cout << "\nHeight: ";
-    *height = userInt();
+    matrix transpose;
+    if (toTranspose.empty()) 
+    { 
+        cout << "Error: matrix has not been input.\n";
+        return transpose; 
+    }
 
-    cout << "Width: ";
-   *width = userInt();
+    for (int row = 0; row < toTranspose[0].size(); ++row)
+    {
+        matrixRow newRow;
+        for (int col = 0; col < toTranspose.size(); ++col)
+        {
+            newRow.push_back(toTranspose[col][row]);
+        }
+        transpose.push_back(newRow);
+    }
+    return transpose;
+}
+
+/**
+ * @brief Multiply the two matrices together.
+ * 
+ * @param first The first matrix operand
+ * @param second The second matrix operand
+ * 
+ * @return The product of the two matrices
+ */
+matrix calculateMultiplication(matrix first, matrix second)
+{
+    matrix product;
+    matrix transposedSecond = transposeMatrix(second);
+
+    // productHeight = firstHeight
+    for (int row = 0; row < first.size(); ++row)
+    {
+        matrixRow newRow;
+        // productWidth = secondWidth
+        for (int col = 0; col < second[0].size(); ++col)
+        {
+            newRow.push_back(dotProduct(first[row], transposedSecond[col]));
+        }
+        product.push_back(newRow);
+    }
+    return product;
+}
+
+/**
+ * @brief Print the incoming matrix. Print an error message
+ * if the matrix is empty.
+ * 
+ * @param print The matrix to display
+ */
+void printMatrix(matrix print)
+{
+    if (print.empty())
+    {
+        cout << "Error: matrix has not been input.\n";
+        return;
+    }
+
+    for (matrixRow row : print)
+    {
+        cout << "\t";
+        for (int num : row)
+        {
+            cout << num << "\t";
+        }
+        cout << "\n";
+    }
 }
 
 /**
@@ -358,32 +386,18 @@ matrixRow fillRow(int maxIndex)
 }
 
 /**
- * @brief Transpose the incoming matrix (by switching the rows
- * with the columns).
- * 
- * @param toTranspose The matrix to transpose
- * 
- * @return The transposed matrix
+ * @brief Set the height and width of the matrix.
+ *
+ * @param[out] height A pointer to the integer representing the desired height of the matrix
+ * @param[out] width A pointer to the integer representing the desired width of the matrix
  */
-matrix transposeMatrix(matrix toTranspose)
+void getDimensions(int *height, int *width)
 {
-    matrix transpose;
-    if (toTranspose.empty()) 
-    { 
-        cout << "Error: matrix has not been input.\n";
-        return transpose; 
-    }
+    cout << "\nHeight: ";
+    *height = userInt();
 
-    for (int row = 0; row < toTranspose[0].size(); ++row)
-    {
-        matrixRow newRow;
-        for (int col = 0; col < toTranspose.size(); ++col)
-        {
-            newRow.push_back(toTranspose[col][row]);
-        }
-        transpose.push_back(newRow);
-    }
-    return transpose;
+    cout << "Width: ";
+   *width = userInt();
 }
 
 /**
@@ -400,33 +414,6 @@ matrix transposeMatrix(matrix toTranspose)
 bool isMultiplicationValid(matrix first, matrix second)
 {
     return (first[0].size() == second.size());
-}
-
-/**
- * @brief Multiply the two matrices together.
- * 
- * @param first The first matrix operand
- * @param second The second matrix operand
- * 
- * @return The product of the two matrices
- */
-matrix multiplyMatrices(matrix first, matrix second)
-{
-    matrix product;
-    matrix transposedSecond = transposeMatrix(second);
-
-    // productHeight = firstHeight
-    for (int row = 0; row < first.size(); ++row)
-    {
-        matrixRow newRow;
-        // productWidth = secondWidth
-        for (int col = 0; col < second[0].size(); ++col)
-        {
-            newRow.push_back(dotProduct(first[row], transposedSecond[col]));
-        }
-        product.push_back(newRow);
-    }
-    return product;
 }
 
 /**
@@ -474,26 +461,18 @@ bool checkChar(char c)
 }
 
 /**
- * @brief Print the incoming matrix. Print an error message
- * if the matrix is empty.
- * 
- * @param print The matrix to display
+ * @brief Get and error check user input. If the input is not an int,
+ * set output parameter to 0.
+ *
+ * @return The integer version of the user input
  */
-void printMatrix(matrix print)
+int userInt()
 {
-    if (print.empty())
-    {
-        cout << "Error: matrix has not been input.\n";
-        return;
-    }
+    string input;
 
-    for (matrixRow row : print)
-    {
-        cout << "\t";
-        for (int num : row)
-        {
-            cout << num << "\t";
-        }
-        cout << "\n";
-    }
+    cin >> input;
+
+    // return if input is not an int
+    if (!isNumber(input)) { return 0; }
+    return stoi(input);
 }
