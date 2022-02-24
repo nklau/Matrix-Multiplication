@@ -58,6 +58,7 @@ int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
 bool isNumber(string);
 bool isCharDigit(char); // TODO lambda fn
+bool intInRange(int, int, int);
 
 // User input
 void multiplyUserInput(matrix, matrix);
@@ -76,7 +77,7 @@ int main()
         printMenu();
         menuOption = getIntFromStdin();
         // Continually ask for user input until input is an int from 1 to 5 (inclusive)
-        while (menuOption < 1 || menuOption > 5) // TODO replace?
+        while (!intInRange(menuOption, 1, 5)) // TODO replace 1 and 5?
         {
             cout << "Please enter a valid input.\n";
             printMenu();
@@ -90,7 +91,7 @@ int main()
             printMatrixInputMenu();
 
             menuOption = getIntFromStdin();
-            while (menuOption < 1 || menuOption > 3)
+            while (!intInRange(menuOption, 1, 3)) // TODO replace 1 and 3?
             {
                 cout << "Please enter a valid input.\n";
                 printMatrixInputMenu();
@@ -110,7 +111,7 @@ int main()
             printTransposeMenu();
 
             menuOption = getIntFromStdin();
-            while (menuOption < 1 || menuOption > 3)
+            while (!intInRange(menuOption, 1, 3))
             {
                 cout << "Please enter a valid input.\n";
                 printTransposeMenu();
@@ -342,7 +343,6 @@ matrixRow fillRow(int maxIndex)
     string input;
     matrixRow newRow;
 
-    // Get user input as a stream.
     getline(cin, input);
     istringstream iss(input);
 
@@ -378,7 +378,7 @@ void multiplyUserInput(matrix matrixA, matrix matrixB)
     printMultiplyMenu();
 
     int bBeforeA = getIntFromStdin();
-    while (bBeforeA < 1 || bBeforeA > 3)
+    while (!intInRange(bBeforeA, 1, 3))
     {
         cout << "Please enter a valid input.\n";
         printMultiplyMenu();
@@ -409,16 +409,16 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
 {
     printMatrixMenu();
 
-    int input = getIntFromStdin();
-    while (input < 1 || input > 3)
+    int menuOption = getIntFromStdin();
+    while (!intInRange(menuOption, 1, 3)) // TODO replace?
     {
         cout << "Please enter a valid input.\n";
         printMatrixMenu();
-        input = getIntFromStdin();
+        menuOption = getIntFromStdin();
     }
-    if (input == RETURN_TO_MAIN_MENU) { return; }
+    if (menuOption == RETURN_TO_MAIN_MENU) { return; }
 
-    printMatrix(input == 1 ? matrixA : matrixB);
+    printMatrix(menuOption == 1 ? matrixA : matrixB);
 }
 
 /**
@@ -553,4 +553,18 @@ int getLineFromStdin()
 
     if (!isNumber(input)) { return 0; }
     return stoi(input);
+}
+
+/**
+ * @brief Return whether the incoming int toCheck is within the range
+ * of [min, max] (inclusive).
+ * 
+ * @param toCheck The int to check
+ * @param min The minimum value of the range
+ * @param max The maximum value of the range
+ * @return true if toCheck is between min and max (inclusive), false otherwise
+ */
+bool intInRange(int toCheck, int min, int max)
+{
+    return (min <= toCheck && max >= toCheck);
 }
