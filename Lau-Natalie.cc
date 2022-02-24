@@ -29,6 +29,7 @@ void printMenu();
 void printMatrixInputMenu();
 void printTransposeMenu();
 void printMultiplyMenu();
+void printMatrixMenu();
 int userInt();
 void matrixInput(int **, int **);
 char userMatrixChoice();
@@ -99,7 +100,7 @@ int main()
 
             if (input == 1) { matrixA = transposeMatrix(matrixA); }
             else  { matrixB = transposeMatrix(matrixB); }
-            
+
             break;
         }
         case 3:
@@ -127,8 +128,18 @@ int main()
         }
         case 4:
         {
-            char matrixChoice = userMatrixChoice();
-            printMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+            printMatrixMenu();
+
+            input = userInt();
+            while (input < 1 || input > 3)
+            {
+                cout << "Please enter a valid input.\n";
+                printMatrixMenu();
+                input = userInt();
+            }
+            if (input == 3) { break; }
+
+            printMatrix(input == 1 ? matrixA : matrixB);
             break;
         }
         case 5:
@@ -194,6 +205,20 @@ void printMultiplyMenu()
     cout << "*    2. B x A                *\n";
     cout << "*    3. Back                 *\n";
     cout << "******************************\n\n";
+}
+
+/// Print the print matrix menu.
+void printMatrixMenu()
+{
+    cout << "\n******************************\n";
+    cout << "*        Print Matrix        *\n";
+    cout << "******************************\n";
+    cout << "*   Please choose a matrix.  *\n";
+    cout << "*                            *\n";
+    cout << "*    1. Print matrix A       *\n";
+    cout << "*    1. Print matrix B       *\n";
+    cout << "*    3. Back                 *\n";
+    cout << "******************************\n";
 }
 
 /**
