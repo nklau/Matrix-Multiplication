@@ -37,6 +37,7 @@ vector<int> fillRow(int);
 void transposeMatrix(matrix *);
 bool isMultiplicationValid(matrix, matrix);
 matrix multiplyMatrices(matrix, matrix);
+int multiplyAdd(vector<int>, vector<int>)   // TODO typedef vector<int> matrixRow
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
@@ -367,22 +368,70 @@ bool isMultiplicationValid(matrix first, matrix second)
 matrix multiplyMatrices(matrix first, matrix second)
 {
     matrix product;
-    // productHeight = firstHeight.
+    matrix transposedSecond = transposeMatrix(second);
+
+    // productHeight = firstHeight
     for (int row = 0; row < first.size(); ++row)
     {
-        vector<int> newRow;
-        // productWidth = secondWidth.
-        for (int col = 0; col < second[0].size(); ++col)
-        {
-            // picks from identity matrix path
-            int dotProduct = 0;
-            for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
-            {
-                dotProduct += first[col][numIndex] * second[numIndex][col]; // TODO index out of bounds (col - needs to be row, but must incrememnt every time)
-            }
-            newRow.push_back(dotProduct);
-        }
-        product.push_back(newRow);
+
+    }
+
+    // productHeight = firstHeight.
+    // for (int row = 0; row < first.size(); ++row)
+    // {
+    //     vector<int> newRow;
+    //     // productWidth = secondWidth.
+    //     for (int col = 0; col < second[0].size(); ++col)
+    //     {
+    //         // picks from identity matrix path
+    //         int dotProduct = 0;
+    //         for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
+    //         {
+    //             dotProduct += first[col][numIndex] * second[numIndex][col]; // TODO index out of bounds (col - needs to be row, but must incrememnt every time)
+    //         }
+    //         newRow.push_back(dotProduct);
+    //     }
+    //     product.push_back(newRow);
+    // }
+
+    // for (int row = 0; row < first.size(); ++row)
+    // {
+    //     vector<int> newRow;
+    //     product.push_back(newRow);
+    // }
+    // productWidth = secondWidth
+    // for (int col = 0; col < second[0].size(); ++col)
+    // {
+    //     cout << "Col " << col << "\n";
+    //     // productHeight = firstHeight
+    //     for (int row = 0; row < first.size(); ++row)
+    //     {
+    //         cout << "Row " << row << "\n";
+    //         int dotProduct = 0;
+    //         for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
+    //         {
+    //             dotProduct += first[row][numIndex] * second[numIndex][row];
+    //         }
+    //         cout << "Number " << dotProduct << "\n";
+    //         product[col].push_back(dotProduct);
+    //     }
+    // }
+    return product;
+}
+
+/**
+ * @brief Calculate the dot product of two incoming vectors.
+ * 
+ * @param rowA The first vector
+ * @param rowB The second vector
+ * @return The dot product of the two vectors
+ */
+int multiplyAdd(vector<int> rowA, vector<int> rowB)
+{
+    int product = 0;
+    for (int i = 0; i < rowA.size(); ++i)
+    {
+        product += rowA[i] * rowB[i];
     }
     return product;
 }
