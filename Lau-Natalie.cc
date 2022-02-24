@@ -213,12 +213,13 @@ matrix fillMatrix(int height, int width)
     matrix toFill;
 
     cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
+    // Clear the new line char from previous inputs.
+    cin.ignore(2, '\n');
 
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
         cout << "Row " << rowIndex + 1 << ": ";
-        cout.clear();
         matrixRow row = fillRow(width);
         // Continually ask for user input until the current row is correctly filled with integers.
         while (row.empty())
@@ -329,15 +330,12 @@ matrixRow fillRow(int maxIndex)
     matrixRow newRow;
 
     // Clear any remaining whitespace from the input buffer.
-    cin.clear(); // TODO doesn't do anything
     getline(cin, input);
     istringstream iss(input);
 
     string token;
 
-    cout << (string)input; // TODO input is a new line char?
-
-    // TODO: gets null every time the first time
+    // Split the string at each space character.
     while (getline(iss, token, ' '))
     {
         // If input is not a number, return an empty vector<int>.
