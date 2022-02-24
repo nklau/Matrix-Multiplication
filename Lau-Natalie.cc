@@ -49,75 +49,82 @@ bool isMultiplicationValid(matrix, matrix);
 void multiplyUserInput(matrix, matrix);
 void printMatrixUserInput(matrix, matrix);
 bool isNumber(string);
-bool checkChar(char);
-int userInt();
-int singleUserInt();
+bool checkChar(char); // TODO rename and/or lambda fn
+int getIntFromStdin();
+int getLineFromStdin();
+
+#define INPUT_MATRIX 1
+#define TRANSPOSE_MATRIX 2
+#define MULTIPLY_MATRIX 3
+#define RETURN_TO_MAIN_MENU 3
+#define PRINT_MATRIX 4
+#define QUIT_PROGRAM 5
 
 int main()
 {
-    int input;
+    int menuOption;
     matrix matrixA, matrixB;
 
-    while (1)
+    while (true)
     {
         printMenu();
-        input = userInt();
+        menuOption = getIntFromStdin();
         // Continually ask for user input until input is an int from 1 to 5 (inclusive)
-        while (input < 1 || input > 5)
+        while (menuOption < 1 || menuOption > 5)
         {
             cout << "Please enter a valid input.\n";
             printMenu();
-            input = userInt();
+            menuOption = getIntFromStdin();
         }
 
-        switch (input)
+        switch (menuOption)
         {
-        case 1: // Input a matrix.
+        case INPUT_MATRIX:
         {
             printMatrixInputMenu();
 
-            input = userInt();
-            while (input < 1 || input > 3)
+            menuOption = getIntFromStdin();
+            while (menuOption < 1 || menuOption > 3)
             {
                 cout << "Please enter a valid input.\n";
                 printMatrixInputMenu();
-                input = userInt();
+                menuOption = getIntFromStdin();
             }
-            if (input == 3) { break; }
+            if (menuOption == 3) { break; }
 
             int height, width;
             setDimensions(&height, &width);
 
-            if (input == 1) { matrixA = fillMatrix(height, width); }
+            if (menuOption == 1) { matrixA = fillMatrix(height, width); }
             else { matrixB = fillMatrix(height, width); }
 
             break;
         }
-        case 2: // Transpose a matrix.
+        case TRANSPOSE_MATRIX:
         {
             printTransposeMenu();
 
-            input = userInt();
-            while (input < 1 || input > 3)
+            menuOption = getIntFromStdin();
+            while (menuOption < 1 || menuOption > 3)
             {
                 cout << "Please enter a valid input.\n";
                 printTransposeMenu();
-                input = userInt();
+                menuOption = getIntFromStdin();
             }
-            if (input == 3) { break; }
+            if (menuOption == RETURN_TO_MAIN_MENU) { break; }
 
-            if (input == 1) { matrixA = transposeMatrix(matrixA); }
+            if (menuOption == 1) { matrixA = transposeMatrix(matrixA); }
             else  { matrixB = transposeMatrix(matrixB); }
 
             break;
         }
-        case 3: // Multiply two matrices.
+        case MULTIPLY_MATRIX:
             multiplyUserInput(matrixA, matrixB);
             break;
-        case 4: // Print a matrix.
+        case PRINT_MATRIX:
             printMatrixUserInput(matrixA, matrixB);
             break;
-        case 5: // End the program.
+        case QUIT_PROGRAM:
             cout << "\nBye!\n";
             return 0;
         }
@@ -365,14 +372,14 @@ void multiplyUserInput(matrix matrixA, matrix matrixB)
 {
     printMultiplyMenu();
 
-    int bBeforeA = userInt();
+    int bBeforeA = getIntFromStdin();
     while (bBeforeA < 1 || bBeforeA > 3)
     {
         cout << "Please enter a valid input.\n";
         printMultiplyMenu();
-        bBeforeA = userInt();
+        bBeforeA = getIntFromStdin();
     }
-    if (bBeforeA == 3) { return; }
+    if (bBeforeA == RETURN_TO_MAIN_MENU) { return; }
 
     // Decrement so only possible values are 1 or 0 (true or false).
     --bBeforeA;
@@ -397,14 +404,14 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
 {
     printMatrixMenu();
 
-    int input = userInt();
+    int input = getIntFromStdin();
     while (input < 1 || input > 3)
     {
         cout << "Please enter a valid input.\n";
         printMatrixMenu();
-        input = userInt();
+        input = getIntFromStdin();
     }
-    if (input == 3) { return; }
+    if (input == RETURN_TO_MAIN_MENU) { return; }
 
     printMatrix(input == 1 ? matrixA : matrixB);
 }
@@ -415,25 +422,25 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
  * @param[out] height A pointer to the integer representing the desired height of the matrix
  * @param[out] width A pointer to the integer representing the desired width of the matrix
  */
-void setDimensions(int *height, int *width)
+void setDimensions(int *height, int *width) // TODO struct Dimension
 {
     cout << "\nHeight: ";
     // Clear the new line char from previous inputs.
     cin.ignore(1, '\n');
 
-    *height = singleUserInt();
+    *height = getLineFromStdin();
     while (*height <= 0)
     {
         cout << "\nError: Please enter a single positive number.\nHeight: ";
-        *height = singleUserInt();
+        *height = getLineFromStdin();
     }
 
     cout << "Width: ";
-    *width = singleUserInt();
+    *width = getLineFromStdin();
     while (*width <= 0)
     {
         cout << "\nError: Please enter a single positive number.\nWidth: ";
-        *width = singleUserInt();
+        *width = getLineFromStdin();
     }
 }
 
@@ -509,7 +516,7 @@ bool checkChar(char c)
  *
  * @return The integer version of the user input
  */
-int userInt()
+int getIntFromStdin()
 {
     string input;
 
@@ -526,7 +533,7 @@ int userInt()
  * 
  * @return The integer version of the user input.
  */
-int singleUserInt()
+int getLineFromStdin()
 {
     string input;
 
