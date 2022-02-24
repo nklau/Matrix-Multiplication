@@ -34,10 +34,10 @@ char userMatrixChoice();
 matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 vector<int> fillRow(int);
-void transposeMatrix(matrix *);
+matrix transposeMatrix(matrix);
 bool isMultiplicationValid(matrix, matrix);
 matrix multiplyMatrices(matrix, matrix);
-int multiplyAdd(vector<int>, vector<int>)   // TODO typedef vector<int> matrixRow
+int multiplyAdd(vector<int>, vector<int>);   // TODO typedef vector<int> matrixRow
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
@@ -84,7 +84,15 @@ int main()
         case 2:
         {
             matrixChoice = userMatrixChoice();
-            transposeMatrix(matrixChoice == 'A' ? &matrixA : &matrixB);
+
+            if (matrixChoice == 'A')
+            {
+                matrixA = transposeMatrix(matrixA);
+            }
+            else 
+            {
+                matrixB = transposeMatrix(matrixB);
+            }
             break;
         }
         case 3:
@@ -320,25 +328,29 @@ vector<int> fillRow(int maxIndex)
  * @brief Transpose the incoming matrix (by switching the rows
  * with the columns).
  * 
- * @param[out] toTranspose The matrix to transpose
+ * @param toTranspose The matrix to transpose
+ * 
+ * @return The transposed matrix
  */
-void transposeMatrix(matrix *toTranspose)
+matrix transposeMatrix(matrix toTranspose)
 {
-    if ((*toTranspose).empty())
-    {
-        return;
-    }
     matrix transpose;
-    for (int row = 0; row < (*toTranspose)[0].size(); ++row)
+    if (toTranspose.empty()) 
+    { 
+        cout << "Error: matrix has not been input.\n";
+        return transpose; 
+    }
+
+    for (int row = 0; row < toTranspose[0].size(); ++row)
     {
         vector<int> newRow;
-        for (int col = 0; col < (*toTranspose).size(); ++col)
+        for (int col = 0; col < toTranspose.size(); ++col)
         {
-            newRow.push_back((*toTranspose)[col][row]); // TODO: found seg fault
+            newRow.push_back(toTranspose[col][row]);
         }
         transpose.push_back(newRow);
     }
-    *toTranspose = transpose;
+    return transpose;
 }
 
 /**
@@ -373,49 +385,14 @@ matrix multiplyMatrices(matrix first, matrix second)
     // productHeight = firstHeight
     for (int row = 0; row < first.size(); ++row)
     {
-
+        vector<int> newRow;
+        // productWidth = secondWidth
+        for (int col = 0; col < second[0].size(); ++col)
+        {
+            newRow.push_back(multiplyAdd(first[row], transposedSecond[col]));
+        }
+        product.push_back(newRow);
     }
-
-    // productHeight = firstHeight.
-    // for (int row = 0; row < first.size(); ++row)
-    // {
-    //     vector<int> newRow;
-    //     // productWidth = secondWidth.
-    //     for (int col = 0; col < second[0].size(); ++col)
-    //     {
-    //         // picks from identity matrix path
-    //         int dotProduct = 0;
-    //         for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
-    //         {
-    //             dotProduct += first[col][numIndex] * second[numIndex][col]; // TODO index out of bounds (col - needs to be row, but must incrememnt every time)
-    //         }
-    //         newRow.push_back(dotProduct);
-    //     }
-    //     product.push_back(newRow);
-    // }
-
-    // for (int row = 0; row < first.size(); ++row)
-    // {
-    //     vector<int> newRow;
-    //     product.push_back(newRow);
-    // }
-    // productWidth = secondWidth
-    // for (int col = 0; col < second[0].size(); ++col)
-    // {
-    //     cout << "Col " << col << "\n";
-    //     // productHeight = firstHeight
-    //     for (int row = 0; row < first.size(); ++row)
-    //     {
-    //         cout << "Row " << row << "\n";
-    //         int dotProduct = 0;
-    //         for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
-    //         {
-    //             dotProduct += first[row][numIndex] * second[numIndex][row];
-    //         }
-    //         cout << "Number " << dotProduct << "\n";
-    //         product[col].push_back(dotProduct);
-    //     }
-    // }
     return product;
 }
 
