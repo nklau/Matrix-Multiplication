@@ -23,7 +23,8 @@
 using namespace std;
 
 // A matrix is represented by a vector of integer vectors.
-typedef vector<vector<int> > matrix;
+typedef vector<int> matrixRow;
+typedef vector<matrixRow> matrix;
 
 // Prototypes
 void printMenu();
@@ -33,11 +34,11 @@ void matrixInput(int **, int **);
 char userMatrixChoice();
 matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
-vector<int> fillRow(int);
+matrixRow fillRow(int);
 matrix transposeMatrix(matrix);
 bool isMultiplicationValid(matrix, matrix);
 matrix multiplyMatrices(matrix, matrix);
-int multiplyAdd(vector<int>, vector<int>);   // TODO typedef vector<int> matrixRow
+int multiplyAdd(matrixRow, matrixRow>);
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
@@ -252,7 +253,7 @@ matrix fillMatrix(int height, int width)
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
-        vector<int> row;
+        matrixRow row;
         // Continually ask for user input until the current row is correctly filled with integers.
         while (row.empty())
         {
@@ -294,10 +295,10 @@ void getDimensions(int *height, int *width)
  *
  * @return An int array representing a single row of the matrix
  */
-vector<int> fillRow(int maxIndex)
+matrixRow fillRow(int maxIndex)
 {
     string input;
-    vector<int> newRow;
+    matrixRow newRow;
 
     // Clear any remaining whitespace from the input buffer.
     cin.clear();
@@ -343,7 +344,7 @@ matrix transposeMatrix(matrix toTranspose)
 
     for (int row = 0; row < toTranspose[0].size(); ++row)
     {
-        vector<int> newRow;
+        matrixRow newRow;
         for (int col = 0; col < toTranspose.size(); ++col)
         {
             newRow.push_back(toTranspose[col][row]);
@@ -385,7 +386,7 @@ matrix multiplyMatrices(matrix first, matrix second)
     // productHeight = firstHeight
     for (int row = 0; row < first.size(); ++row)
     {
-        vector<int> newRow;
+        matrixRow newRow;
         // productWidth = secondWidth
         for (int col = 0; col < second[0].size(); ++col)
         {
@@ -403,7 +404,7 @@ matrix multiplyMatrices(matrix first, matrix second)
  * @param rowB The second vector
  * @return The dot product of the two vectors
  */
-int multiplyAdd(vector<int> rowA, vector<int> rowB)
+int multiplyAdd(matrixRow rowA, matrixRow rowB)
 {
     int product = 0;
     for (int i = 0; i < rowA.size(); ++i)
@@ -454,7 +455,7 @@ void printMatrix(matrix print)
         return;
     }
 
-    for (vector<int> row : print)
+    for (matrixRow row : print)
     {
         cout << "\t";
         for (int num : row)
