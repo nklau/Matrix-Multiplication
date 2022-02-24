@@ -51,6 +51,7 @@ void printMatrixUserInput(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
 int userInt();
+int singleUserInt();
 
 int main()
 {
@@ -211,9 +212,12 @@ matrix fillMatrix(int height, int width)
 {
     matrix toFill;
 
-    cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
+    cout << "\nPlease enter each row as " << width << " number";
+    if (width > 1) { cout << "s"; }
+    cout << " separated by spaces.\n";
+
     // Clear the new line char from previous inputs.
-    cin.ignore(2, '\n');
+    cin.ignore(3, '\n');
 
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
@@ -416,20 +420,23 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
 void setDimensions(int *height, int *width)
 {
     cout << "\nHeight: ";
-    *height = userInt();
+    // Clear the new line char from previous inputs.
+    cin.ignore(1, '\n');
+
+    *height = singleUserInt();
     while (*height <= 0)
     {
-        cout << "\nError: Please enter a positive number.\nHeight: ";
-        *height = userInt();
+        cout << "\nError: Please enter a single positive number.\nHeight: ";
+        *height = singleUserInt();
     }
 
     cout << "Width: ";
-   *width = userInt();
-   while (*width <= 0)
-   {
-       cout << "\nError: Please enter a positive number.\nWidth: ";
-       *width = userInt();
-   }
+    *width = singleUserInt();
+    while (*width <= 0)
+    {
+        cout << "\nError: Please enter a single positive number.\nWidth: ";
+        *width = singleUserInt();
+    }
 }
 
 /**
@@ -511,6 +518,23 @@ int userInt()
     cin >> input;
 
     // return if input is not an int
+    if (!isNumber(input)) { return 0; }
+    return stoi(input);
+}
+
+/**
+ * @brief Get and error check user input. If the input is not a 
+ * single integer, return 0.
+ * 
+ * @return The integer version of the user input.
+ */
+int singleUserInt()
+{
+    string input;
+
+    // Get entire line in case user includes whitespace in answer.
+    getline(cin, input);
+
     if (!isNumber(input)) { return 0; }
     return stoi(input);
 }
