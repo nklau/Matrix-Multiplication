@@ -27,6 +27,7 @@ typedef vector<matrixRow> matrix;
 // Prototypes
 void printMenu();
 void printMatrixInputMenu();
+void printTransposeMenu();
 void printMultiplyMenu();
 int userInt();
 void matrixInput(int **, int **);
@@ -78,23 +79,27 @@ int main()
             int height, width;
             getDimensions(&height, &width);
 
-            if (input) { matrixA = fillMatrix(height, width); }
+            if (input == 1) { matrixA = fillMatrix(height, width); }
             else { matrixB = fillMatrix(height, width); }
 
             break;
         }
         case 2:
         {
-            matrixChoice = userMatrixChoice();
+            printTransposeMenu();
 
-            if (matrixChoice == 'A')
+            input = userInt();
+            while (input < 1 || input > 3)
             {
-                matrixA = transposeMatrix(matrixA);
+                cout << "Please enter a valid input.\n";
+                printTransposeMenu();
+                input = userInt();
             }
-            else 
-            {
-                matrixB = transposeMatrix(matrixB);
-            }
+            if (input == 3) { break; }
+
+            if (input == 1) { matrixA = transposeMatrix(matrixA); }
+            else  { matrixB = transposeMatrix(matrixB); }
+            
             break;
         }
         case 3:
@@ -163,7 +168,21 @@ void printMatrixInputMenu()
     cout << "******************************\n";
 }
 
-/// Print the multiply menu.
+/// Print the matrix transposition menu.
+void printTransposeMenu()
+{
+    cout << "\n******************************\n";
+    cout << "*    Matrix Transposition    *\n";
+    cout << "******************************\n";
+    cout << "*   Please choose a matrix.  *\n";
+    cout << "*                            *\n";
+    cout << "*    1. Transpose matrix A   *\n";
+    cout << "*    1. Transpose matrix B   *\n";
+    cout << "*    3. Back                 *\n";
+    cout << "******************************\n";
+}
+
+/// Print the matrix multiplication menu.
 void printMultiplyMenu()
 {
     cout << "\n******************************\n";
