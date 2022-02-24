@@ -35,7 +35,7 @@ void printMatrixMenu();
 // Main functions
 matrix fillMatrix(int, int);
 matrix transposeMatrix(matrix);
-matrix calculateMultiplication(matrix, matrix);
+matrix multiplyMatrices(matrix, matrix);
 void printMatrix(matrix);
 
 // Helper functions
@@ -45,6 +45,7 @@ int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
 
 // User input
+void multiplyUserInput(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
 int userInt();
@@ -110,25 +111,7 @@ int main()
         }
         case 3:
         {
-            printMultiplyMenu();
-
-            int bBeforeA = userInt();
-            while (bBeforeA < 1 || bBeforeA > 3)
-            {
-                cout << "Please enter a valid input.\n";
-                printMultiplyMenu();
-                bBeforeA = userInt();
-            }
-            if (bBeforeA == 3) { break; }
-
-            --bBeforeA;
-            if (!isMultiplicationValid(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB))
-            {
-                cout << "Error: matrices are not compatible for multiplication.\n";
-                break;
-            }
-            matrix product = calculateMultiplication(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
-            printMatrix(product);
+            multiplyUserInput(matrixA, matrixB);
             break;
         }
         case 4:
@@ -301,7 +284,7 @@ matrix transposeMatrix(matrix toTranspose)
  * 
  * @return The product of the two matrices
  */
-matrix calculateMultiplication(matrix first, matrix second)
+matrix multiplyMatrices(matrix first, matrix second)
 {
     matrix product;
     matrix transposedSecond = transposeMatrix(second);
@@ -383,6 +366,36 @@ matrixRow fillRow(int maxIndex)
     // If there is the wrong number of inputs, return an empty vector<int>.
     if (newRow.size() != maxIndex) { newRow.clear(); }
     return newRow;
+}
+
+/**
+ * @brief Decide order of matrix multiplication, then print result
+ * of computation.
+ * 
+ * @param matrixA The first matrix operand
+ * @param matrixB The second matrix operand
+ */
+void multiplyUserInput(matrix matrixA, matrix matrixB)
+{
+    printMultiplyMenu();
+
+    int bBeforeA = userInt();
+    while (bBeforeA < 1 || bBeforeA > 3)
+    {
+        cout << "Please enter a valid input.\n";
+        printMultiplyMenu();
+        bBeforeA = userInt();
+    }
+    if (bBeforeA == 3) { return; }
+
+    --bBeforeA;
+    if (!isMultiplicationValid(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB))
+    {
+        cout << "Error: matrices are not compatible for multiplication.\n";
+        return;
+    }
+    matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
+    printMatrix(product);
 }
 
 /**
