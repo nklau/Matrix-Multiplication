@@ -25,23 +25,28 @@ typedef vector<int> matrixRow;
 typedef vector<matrixRow> matrix;
 
 // Prototypes
+// Menus
 void printMenu();
 void printMatrixInputMenu();
 void printTransposeMenu();
 void printMultiplyMenu();
 void printMatrixMenu();
 
-void matrixInput(int **, int **);
+// Main functions
 matrix fillMatrix(int, int);
+matrix transposeMatrix(matrix);
+matrix multiplyMatrices(matrix, matrix);
+void printMatrix(matrix);
+
+// Helper functions
 void getDimensions(int *, int *);
 matrixRow fillRow(int);
-matrix transposeMatrix(matrix);
+int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
-matrix multiplyMatrices(matrix, matrix);
-int multiplyAdd(matrixRow, matrixRow);
+
+// User input
 bool isNumber(string);
 bool checkChar(char);
-void printMatrix(matrix);
 int userInt();
 
 int main()
@@ -417,7 +422,7 @@ matrix multiplyMatrices(matrix first, matrix second)
         // productWidth = secondWidth
         for (int col = 0; col < second[0].size(); ++col)
         {
-            newRow.push_back(multiplyAdd(first[row], transposedSecond[col]));
+            newRow.push_back(dotProduct(first[row], transposedSecond[col]));
         }
         product.push_back(newRow);
     }
@@ -431,7 +436,7 @@ matrix multiplyMatrices(matrix first, matrix second)
  * @param rowB The second vector
  * @return The dot product of the two vectors
  */
-int multiplyAdd(matrixRow rowA, matrixRow rowB)
+int dotProduct(matrixRow rowA, matrixRow rowB)
 {
     int product = 0;
     for (int i = 0; i < rowA.size(); ++i)
