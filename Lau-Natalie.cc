@@ -7,7 +7,7 @@
  * @brief Computes matrix multiplication and matrix transposes
  * of MxN matrices.
  *
- * Matrices are stored as std::array<std::array<int, width>, height>
+ * Matrices are stored as std::vector<std::vector<int> >
  * 
  * Compile using 'g++ -std=c++11 Lau-Natalie.cc -o Lau-Natalie && ./Lau-Natalie'
  *
@@ -56,7 +56,6 @@ int main()
 {
     int input;
     matrix matrixA, matrixB;
-    char matrixChoice;
 
     while (1)
     {
@@ -72,7 +71,7 @@ int main()
 
         switch (input)
         {
-        case 1:
+        case 1: // Input a matrix.
         {
             printMatrixInputMenu();
 
@@ -93,7 +92,7 @@ int main()
 
             break;
         }
-        case 2:
+        case 2: // Transpose a matrix.
         {
             printTransposeMenu();
 
@@ -111,13 +110,13 @@ int main()
 
             break;
         }
-        case 3:
+        case 3: // Multiply two matrices.
             multiplyUserInput(matrixA, matrixB);
             break;
-        case 4:
+        case 4: // Print a matrix.
             printMatrixUserInput(matrixA, matrixB);
             break;
-        case 5:
+        case 5: // End the program.
             cout << "\nBye!\n";
             return 0;
         }
@@ -206,7 +205,7 @@ void printMatrixMenu()
  * @param height The number of rows in the matrix
  * @param width The number of cols in the matrix
  *
- * @return A 2D array that represents the matrix
+ * @return A vector of vector<int>s that represents the matrix
  */
 matrix fillMatrix(int height, int width)
 {
@@ -318,18 +317,18 @@ void printMatrix(matrix print)
  * @brief Get user input and check that all inputs are integers and that there is the
  * correct number of inputs.
  *
- * If input is valid, fill incoming int array with user input.
+ * If input is valid, return a vector<int> filled with user input.
  *
  * @param maxIndex The width of the matrix
  *
- * @return An int array representing a single row of the matrix
+ * @return An vector<int> representing a single row of the matrix
  */
 matrixRow fillRow(int maxIndex)
 {
     string input;
     matrixRow newRow;
 
-    // Clear any remaining whitespace from the input buffer.
+    // Get user input as a stream.
     getline(cin, input);
     istringstream iss(input);
 
@@ -373,12 +372,14 @@ void multiplyUserInput(matrix matrixA, matrix matrixB)
     }
     if (bBeforeA == 3) { return; }
 
+    // Decrement so only possible values are 1 or 0 (true or false).
     --bBeforeA;
     if (!isMultiplicationValid(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB))
     {
         cout << "Error: matrices are not compatible for multiplication.\n";
         return;
     }
+
     matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
     printMatrix(product);
 }
@@ -430,6 +431,7 @@ void getDimensions(int *height, int *width)
  * 
  * @param first The first matrix to consider as an operand
  * @param second The second matrix to consider as an operand
+ * 
  * @return true if the matrices can be multiplied, false otherwise
  */
 bool isMultiplicationValid(matrix first, matrix second)
@@ -442,6 +444,7 @@ bool isMultiplicationValid(matrix first, matrix second)
  * 
  * @param rowA The first vector
  * @param rowB The second vector
+ * 
  * @return The dot product of the two vectors
  */
 int dotProduct(matrixRow rowA, matrixRow rowB)
@@ -458,6 +461,7 @@ int dotProduct(matrixRow rowA, matrixRow rowB)
  * @brief Return true if incoming string is an integer.
  * 
  * @param str The string to check
+ * 
  * @return true if str is an int, false otherwise
  */
 bool isNumber(string str)
@@ -467,13 +471,16 @@ bool isNumber(string str)
     {
         str = str.substr(1);
     }
+
     return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
 }
 
 /**
- * @brief Check if the incoming character is a digit.
+ * @brief Check if the incoming character is a digit. A digit
+ * is an int from 0 to 9 (inclusive).
  * 
  * @param c The char to check
+ * 
  * @return true if c is an int, false otherwise
  */
 bool checkChar(char c)
@@ -483,7 +490,7 @@ bool checkChar(char c)
 
 /**
  * @brief Get and error check user input. If the input is not an int,
- * set output parameter to 0.
+ * return 0.
  *
  * @return The integer version of the user input
  */
