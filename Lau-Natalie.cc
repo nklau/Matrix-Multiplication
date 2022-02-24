@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -216,17 +217,15 @@ matrix fillMatrix(int height, int width)
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
-        matrixRow row;
+        cout << "Row " << rowIndex + 1 << ": ";
+        cout.clear();
+        matrixRow row = fillRow(width);
         // Continually ask for user input until the current row is correctly filled with integers.
         while (row.empty())
         {
+            cout << "\nPlease enter valid inputs.\n";
             cout << "Row " << rowIndex + 1 << ": ";
             row = fillRow(width);
-
-            if (row.empty())
-            {
-                cout << "\nPlease enter valid inputs.\n";
-            }
         }
         toFill.push_back(row);
     }
@@ -330,23 +329,25 @@ matrixRow fillRow(int maxIndex)
     matrixRow newRow;
 
     // Clear any remaining whitespace from the input buffer.
-    cin.clear();
+    cin.clear(); // TODO doesn't do anything
     getline(cin, input);
+    istringstream iss(input);
 
-    // Set tokenStart to the first number in input.
-    char *tokenStart = strtok((char *)input.c_str(), " ");
+    string token;
 
-    while (tokenStart != NULL)
+    cout << (string)input; // TODO input is a new line char?
+
+    // TODO: gets null every time the first time
+    while (getline(iss, token, ' '))
     {
         // If input is not a number, return an empty vector<int>.
-        if (!isNumber((string)tokenStart))
+        if (!isNumber((string)token))
         {
             newRow.clear();
             return newRow;
         }
 
-        newRow.push_back(stoi((string)tokenStart));
-        tokenStart = strtok(NULL, " ");
+        newRow.push_back(stoi((string)token));
     }
 
     // If there is the wrong number of inputs, return an empty vector<int>.
