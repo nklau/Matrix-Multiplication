@@ -7,86 +7,173 @@
  * @brief Computes matrix multiplication and matrix transposes
  * of MxN matrices.
  *
- * @version 0.1
+ * Matrices are stored as std::array<std::array<int, width>, height>
+ * 
+ * Compile using 'g++ -std=c++11 Lau-Natalie.cc -o Lau-Natalie && ./Lau-Natalie'
  *
  * @date 2022-02-18
  *
  */
 
-// TODO LIST: change matrices to pointers to 2d arrays
-// store as 2d arrays, pass as pointers to those objects
-
 #include <iostream>
-#include <ctype.h>
-#include <limits>
 #include <vector>
 
-using std::string;
+using namespace std;
+
+// A matrix is represented by a vector of integer vectors.
+typedef vector<int> matrixRow;
+typedef vector<matrixRow> matrix;
 
 // Prototypes
 void printMenu();
-void userInt(int *);
-void matrixInput(int *[], int *[]);
-void userMatrixChoice(char *);
-void fillMatrix(int *[]);
+void printMatrixInputMenu();
+void printMultiplyMenu();
+int userInt();
+void matrixInput(int **, int **);
+char userMatrixChoice();
+matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
-void fillRow(int [], int);
-void transposeMatrix();
-void multiplyMatrices();
+matrixRow fillRow(int);
+matrix transposeMatrix(matrix);
+bool isMultiplicationValid(matrix, matrix);
+matrix multiplyMatrices(matrix, matrix);
+int multiplyAdd(matrixRow, matrixRow);
 bool isNumber(string);
 bool checkChar(char);
+void printMatrix(matrix);
 
 int main()
 {
-    using std::cout;
+    int input;
+    matrix matrixA, matrixB;
+    char matrixChoice;
 
-    int input = 0;
-    int **matrixA, **matrixB; // TODO: change
-
-    printMenu();
-    // Continually ask for user input until input is an int from 1 to 4 (inclusive)
-    while (input < 1 || input > 4)
+    while (1)
     {
-        userInt(&input);
-        if (input < 1 || input > 4)
+        printMenu();
+        input = userInt();
+        // Continually ask for user input until input is an int from 1 to 5 (inclusive)
+        while (input < 1 || input > 5)
         {
             cout << "Please enter a valid input.\n";
             printMenu();
+            input = userInt();
+        }
+
+        switch (input)
+        {
+        case 1:
+        {
+            printMatrixInputMenu();
+
+            input = userInt();
+            while (input < 1 || input > 3)
+            {
+                cout << "Please enter a valid input.\n";
+                printMatrixInputMenu();
+                input = userInt();
+            }
+            if (input == 3) { break; }
+
+            int height, width;
+            getDimensions(&height, &width);
+
+            if (input) { matrixA = fillMatrix(height, width); }
+            else { matrixB = fillMatrix(height, width); }
+
+            break;
+        }
+        case 2:
+        {
+            matrixChoice = userMatrixChoice();
+
+            if (matrixChoice == 'A')
+            {
+                matrixA = transposeMatrix(matrixA);
+            }
+            else 
+            {
+                matrixB = transposeMatrix(matrixB);
+            }
+            break;
+        }
+        case 3:
+        {
+            printMultiplyMenu();
+
+            int bBeforeA = userInt();
+            while (bBeforeA < 1 || bBeforeA > 3)
+            {
+                cout << "Please enter a valid input.\n";
+                printMultiplyMenu();
+                bBeforeA = userInt();
+            }
+            if (bBeforeA == 3) { break; }
+
+            --bBeforeA;
+            if (!isMultiplicationValid(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB))
+            {
+                cout << "Error: matrices are not compatible for multiplication.\n";
+                break;
+            }
+            matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
+            printMatrix(product);
+            break;
+        }
+        case 4:
+        {
+            char matrixChoice = userMatrixChoice();
+            printMatrix(matrixChoice == 'A' ? matrixA : matrixB);
+            break;
+        }
+        case 5:
+            cout << "\nBye!\n";
+            return 0;
         }
     }
-
-    switch (input)
-    {
-    case 1:
-        matrixInput(matrixA, matrixB);
-        break;
-    case 2:
-        transposeMatrix();
-        break;
-    case 3:
-        multiplyMatrices();
-        break;
-    case 4:
-        cout << "\nBye!\n";
-        return 0;
-    }
-    // free(matrixA);
-    // free(matrixB);
 }
 
 /// Print the main menu of the program.
 void printMenu()
 {
-    using std::cout;
-
     cout << "\n******************************\n";
     cout << "*   Linear Algebra Library   *\n";
     cout << "******************************\n";
     cout << "*  Please choose an option.  *\n";
+    cout << "*                            *\n";
     cout << "*  1. Input matrix           *\n";
     cout << "*  2. Transpose matrix       *\n";
-    cout << "*  3. Matrix multiplication  *\n"; // TODO: ask order, store?
-    cout << "*  4. Quit                   *\n";
+    cout << "*  3. Matrix multiplication  *\n";
+    cout << "*  4. Print matrix           *\n";
+    cout << "*  5. Quit                   *\n"; 
+    cout << "******************************\n\n";
+}
+
+/// Print the matrix input menu.
+void printMatrixInputMenu()
+{
+    cout << "\n******************************\n";
+    cout << "*        Matrix Input        *\n";
+    cout << "******************************\n";
+    cout << "*   Please choose a matrix.  *\n";
+    cout << "*                            *\n";
+    cout << "*    1. Input matrix A       *\n";
+    cout << "*    2. Input matrix B       *\n";
+    cout << "*    3. Back                 *\n";
+    cout << "******************************\n";
+}
+
+/// Print the multiply menu.
+void printMultiplyMenu()
+{
+    cout << "\n******************************\n";
+    cout << "*    Matrix Multiplication   *\n";
+    cout << "******************************\n";
+    cout << "*    Please choose order.    *\n";
+    cout << "*                            *\n";
+    cout << "*    1. A x B                *\n";
+    cout << "*    2. B x A                *\n";
+    cout << "*    3. Back                 *\n";
     cout << "******************************\n\n";
 }
 
@@ -94,206 +181,295 @@ void printMenu()
  * @brief Get and error check user input. If the input is not an int,
  * set output parameter to 0.
  *
- * @param[out] intInput A pointer to the integer version of the user input
+ * @return The integer version of the user input
  */
-void userInt(int *intInput)
+int userInt()
 {
-    using std::cin;
-    using std::stoi;
-
     string input;
 
     cin >> input;
 
     // return if input is not an int
-    if (!isNumber(input))
-    {
-        *intInput = 0;
-        return;
-    }
-    *intInput = stoi(input);
+    if (!isNumber(input)) { return 0; }
+    return stoi(input);
 }
 
 /**
- * @brief Ask if user wants to fill matrix A or matrix B, then fill
- * the corresponding matrix.
- * 
- * Matrices are stored as pointers to an int array, where one int array
- * is a single row.
- * 
- * @param matrixA A pointer to matrix A
- * @param matrixB A pointer to matrix B
+ * @brief Get and error check user input. If the input is not
+ * either the character 'A' or 'B', return NULL character.
+ *
+ * @return The user input character, NULL char if input is invalid
  */
-void matrixInput(int *matrixA[], int *matrixB[])
+char userChar()
 {
-    using std::cout;
+    string input;
 
-    char matrix = '\0';
-    
+    cin >> input;
+
+    // Return null char if input is not 1 char long OR is not a valid character.
+    if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
+    {
+        return '\0';
+    }
+
+    return toupper(input[0]);
+}
+
+/**
+ * @brief Return whether user wants to fill matrix A or matrix B.
+ *
+ * @return 'A' for matrixA, 'B' for matrixB
+ */
+char userMatrixChoice()
+{
+    char matrixChoice = '\0';
+
     // Continually ask for user input until a valid input is given.
     // A valid input is one of the following: 'A', 'a', 'B', 'b'
-    while (matrix == '\0')
+    while (matrixChoice == '\0')
     {
-        cout << "\nWould you like to input matrix A or B?\n";
-        userMatrixChoice(&matrix);
-        if (matrix == '\0')
+        cout << "\nPlease choose matrix A or B.\n";
+        matrixChoice = userChar();
+
+        if (matrixChoice == '\0')
         {
             cout << "Please enter a valid input.\n";
         }
     }
 
-    fillMatrix(matrix == 'A' ? matrixA : matrixB);
-}
-
-/**
- * @brief Get and error check user input. If the input is not
- * either the character 'A' or 'B', set the output parameter 
- * to the NULL character.
- * 
- * @param[out] inputChar A pointer to the user input character
- */
-void userMatrixChoice(char *inputChar)
-{
-    using std::cin;
-
-    string input;
-
-    cin >> input;
-    // cin.ignore();
-
-    // return if input is not 1 char long OR is not a valid character
-    if (input.length() != 1 || toupper(input[0]) != 'A' && toupper(input[0]) != 'B')
-    {
-        *inputChar = '\0';
-        return;
-    }
-
-    *inputChar = toupper(input[0]);
+    return matrixChoice;
 }
 
 /**
  * @brief Set the dimensions of the matrix based on user
  * input, then fill with integers based on user input.
- * 
- * @param[out] matrix A pointer to the matrix
+ *
+ * Matrices are stored as a vector of int vectors, where one
+ * vector<int> is a single row.
+ *
+ * @param height The number of rows in the matrix
+ * @param width The number of cols in the matrix
+ *
+ * @return A 2D array that represents the matrix
  */
-void fillMatrix(int *matrix[])
+matrix fillMatrix(int height, int width)
 {
-    using std::cout;
+    matrix toFill;
 
-    int height, width;
-
-    getDimensions(&height, &width);
     cout << "\nPlease enter each row as " << width << " numbers separated by spaces.\n";
 
     // Fill the matrix one row at a time.
-    for (int row = 0; row < height; ++row)
+    for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
-        // Continually ask for user input until the current row is filled with integers.
-        while (*(matrix + row) == NULL) 
+        matrixRow row;
+        // Continually ask for user input until the current row is correctly filled with integers.
+        while (row.empty())
         {
-            cout << "Row " << row + 1 << ": ";
-            fillRow(*(matrix + row), width);
-            if (*(matrix + row) == NULL) 
+            cout << "Row " << rowIndex + 1 << ": ";
+            row = fillRow(width);
+
+            if (row.empty())
             {
                 cout << "\nPlease enter valid inputs.\n";
             }
         }
+        toFill.push_back(row);
     }
+    return toFill;
 }
 
 /**
  * @brief Set the height and width of the matrix.
- * 
+ *
  * @param[out] height A pointer to the integer representing the desired height of the matrix
  * @param[out] width A pointer to the integer representing the desired width of the matrix
  */
 void getDimensions(int *height, int *width)
 {
-    using std::cout;
-
     cout << "\nHeight: ";
-    userInt(height);
+    *height = userInt();
 
     cout << "Width: ";
-    userInt(width);
+   *width = userInt();
 }
 
 /**
  * @brief Get user input and check that all inputs are integers and that there is the
- * correct number of inputs. 
- * 
- * @param[out] row The int array to fill
+ * correct number of inputs.
+ *
+ * If input is valid, fill incoming int array with user input.
+ *
  * @param maxIndex The width of the matrix
+ *
+ * @return An int array representing a single row of the matrix
  */
-void fillRow(int row[], int maxIndex) 
+matrixRow fillRow(int maxIndex)
 {
-    using std::cin;
-    using std::cout; // TODO: delete
-    using std::vector;
-
     string input;
-    vector<int> tokens;
+    matrixRow newRow;
 
     // Clear any remaining whitespace from the input buffer.
-    cin.ignore();
+    cin.clear();
     getline(cin, input);
 
     // Set tokenStart to the first number in input.
     char *tokenStart = strtok((char *)input.c_str(), " ");
 
-    for (int i = 0; i < maxIndex; ++i)
+    while (tokenStart != NULL)
     {
-        // If input is not a number, set row to NULL and return.
+        // If input is not a number, return an empty vector<int>.
         if (!isNumber((string)tokenStart))
         {
-            row = NULL;
-            return;
+            newRow.clear();
+            return newRow;
         }
-        // Otherwise, set element in row to int version of input.
-        row[i] = stoi((string)tokenStart);
+
+        newRow.push_back(stoi((string)tokenStart));
+        tokenStart = strtok(NULL, " ");
     }
 
-    // If there are not enough numbers in input, set row to NULL and return.
-    if (row[maxIndex - 1] == NULL)
+    // If there is the wrong number of inputs, return an empty vector<int>.
+    if (newRow.size() != maxIndex) { newRow.clear(); }
+    return newRow;
+}
+
+/**
+ * @brief Transpose the incoming matrix (by switching the rows
+ * with the columns).
+ * 
+ * @param toTranspose The matrix to transpose
+ * 
+ * @return The transposed matrix
+ */
+matrix transposeMatrix(matrix toTranspose)
+{
+    matrix transpose;
+    if (toTranspose.empty()) 
+    { 
+        cout << "Error: matrix has not been input.\n";
+        return transpose; 
+    }
+
+    for (int row = 0; row < toTranspose[0].size(); ++row)
     {
-        row = NULL;
-        return;
+        matrixRow newRow;
+        for (int col = 0; col < toTranspose.size(); ++col)
+        {
+            newRow.push_back(toTranspose[col][row]);
+        }
+        transpose.push_back(newRow);
     }
-
-    // for (char *tokenStart = strtok((char *)input.c_str(), " "); tokenStart != NULL; tokenStart = strtok(NULL, " "))
-    // {
-    //     if (!isNumber((string)tokenStart))
-    //     {
-    //         row = NULL;
-    //         return;
-    //     }
-    //     tokens.push_back(stoi((string)tokenStart));
-    // }
+    return transpose;
 }
 
-void transposeMatrix()
+/**
+ * @brief Determine if the two incoming matrices can be 
+ * multiplied together.
+ * 
+ * The width of the first matrix must equal the height of the
+ * second.
+ * 
+ * @param first The first matrix to consider as an operand
+ * @param second The second matrix to consider as an operand
+ * @return true if the matrices can be multiplied, false otherwise
+ */
+bool isMultiplicationValid(matrix first, matrix second)
 {
-    using std::cout;
-
-    cout << "Matrix Transposition\n";
+    return (first[0].size() == second.size());
 }
 
-void multiplyMatrices()
+/**
+ * @brief Multiply the two matrices together.
+ * 
+ * @param first The first matrix operand
+ * @param second The second matrix operand
+ * 
+ * @return The product of the two matrices
+ */
+matrix multiplyMatrices(matrix first, matrix second)
 {
-    using std::cout;
+    matrix product;
+    matrix transposedSecond = transposeMatrix(second);
 
-    cout << "Matrix Multiplication\n";
+    // productHeight = firstHeight
+    for (int row = 0; row < first.size(); ++row)
+    {
+        matrixRow newRow;
+        // productWidth = secondWidth
+        for (int col = 0; col < second[0].size(); ++col)
+        {
+            newRow.push_back(multiplyAdd(first[row], transposedSecond[col]));
+        }
+        product.push_back(newRow);
+    }
+    return product;
 }
 
-bool isNumber(string str) 
+/**
+ * @brief Calculate the dot product of two incoming vectors.
+ * 
+ * @param rowA The first vector
+ * @param rowB The second vector
+ * @return The dot product of the two vectors
+ */
+int multiplyAdd(matrixRow rowA, matrixRow rowB)
 {
-    using std::find_if;
+    int product = 0;
+    for (int i = 0; i < rowA.size(); ++i)
+    {
+        product += rowA[i] * rowB[i];
+    }
+    return product;
+}
 
+/**
+ * @brief Return true if incoming string is an integer.
+ * 
+ * @param str The string to check
+ * @return true if str is an int, false otherwise
+ */
+bool isNumber(string str)
+{
+    // Allow for negative numbers.
+    if (str[0] == '-')
+    {
+        str = str.substr(1);
+    }
     return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
 }
 
-bool checkChar(char c) 
+/**
+ * @brief Check if the incoming character is a digit.
+ * 
+ * @param c The char to check
+ * @return true if c is an int, false otherwise
+ */
+bool checkChar(char c)
 {
     return !isdigit(c);
+}
+
+/**
+ * @brief Print the incoming matrix. Print an error message
+ * if the matrix is empty.
+ * 
+ * @param print The matrix to display
+ */
+void printMatrix(matrix print)
+{
+    if (print.empty())
+    {
+        cout << "Error: matrix has not been input.\n";
+        return;
+    }
+
+    for (matrixRow row : print)
+    {
+        cout << "\t";
+        for (int num : row)
+        {
+            cout << num << "\t";
+        }
+        cout << "\n";
+    }
 }
