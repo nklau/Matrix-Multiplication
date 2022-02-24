@@ -216,13 +216,11 @@ matrix fillMatrix(int height, int width)
     if (width > 1) { cout << "s"; }
     cout << " separated by spaces.\n";
 
-    // Clear the new line char from previous inputs.
-    cin.ignore(3, '\n');
-
     // Fill the matrix one row at a time.
     for (int rowIndex = 0; rowIndex < height; ++rowIndex)
     {
         cout << "Row " << rowIndex + 1 << ": ";
+
         matrixRow row = fillRow(width);
         // Continually ask for user input until the current row is correctly filled with integers.
         while (row.empty())
