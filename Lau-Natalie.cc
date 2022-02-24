@@ -30,9 +30,8 @@ void printMatrixInputMenu();
 void printTransposeMenu();
 void printMultiplyMenu();
 void printMatrixMenu();
-int userInt();
+
 void matrixInput(int **, int **);
-char userMatrixChoice();
 matrix fillMatrix(int, int);
 void getDimensions(int *, int *);
 matrixRow fillRow(int);
@@ -43,6 +42,7 @@ int multiplyAdd(matrixRow, matrixRow);
 bool isNumber(string);
 bool checkChar(char);
 void printMatrix(matrix);
+int userInt();
 
 int main()
 {
@@ -257,31 +257,6 @@ char userChar()
     }
 
     return toupper(input[0]);
-}
-
-/**
- * @brief Return whether user wants to fill matrix A or matrix B.
- *
- * @return 'A' for matrixA, 'B' for matrixB
- */
-char userMatrixChoice()
-{
-    char matrixChoice = '\0';
-
-    // Continually ask for user input until a valid input is given.
-    // A valid input is one of the following: 'A', 'a', 'B', 'b'
-    while (matrixChoice == '\0')
-    {
-        cout << "\nPlease choose matrix A or B.\n";
-        matrixChoice = userChar();
-
-        if (matrixChoice == '\0')
-        {
-            cout << "Please enter a valid input.\n";
-        }
-    }
-
-    return matrixChoice;
 }
 
 /**
