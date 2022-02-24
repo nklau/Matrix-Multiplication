@@ -25,6 +25,19 @@ using namespace std;
 typedef vector<int> matrixRow;
 typedef vector<matrixRow> matrix;
 
+#define INPUT_MATRIX 1
+#define TRANSPOSE_MATRIX 2
+#define MULTIPLY_MATRIX 3
+#define RETURN_TO_MAIN_MENU 3
+#define PRINT_MATRIX 4
+#define QUIT_PROGRAM 5
+
+struct MatrixDimensions
+{
+    int height;
+    int width;
+};
+
 // Prototypes
 // Menus
 void printMenu();
@@ -40,25 +53,18 @@ matrix multiplyMatrices(matrix, matrix);
 void printMatrix(matrix);
 
 // Helper functions
-void setDimensions(int *, int *);
 matrixRow fillRow(int);
 int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
 
 // User input
+MatrixDimensions getDimensionsFromStdin();
 void multiplyUserInput(matrix, matrix);
 void printMatrixUserInput(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char); // TODO rename and/or lambda fn
 int getIntFromStdin();
 int getLineFromStdin();
-
-#define INPUT_MATRIX 1
-#define TRANSPOSE_MATRIX 2
-#define MULTIPLY_MATRIX 3
-#define RETURN_TO_MAIN_MENU 3
-#define PRINT_MATRIX 4
-#define QUIT_PROGRAM 5
 
 int main()
 {
@@ -70,7 +76,7 @@ int main()
         printMenu();
         menuOption = getIntFromStdin();
         // Continually ask for user input until input is an int from 1 to 5 (inclusive)
-        while (menuOption < 1 || menuOption > 5)
+        while (menuOption < 1 || menuOption > 5) // TODO replace?
         {
             cout << "Please enter a valid input.\n";
             printMenu();
@@ -90,13 +96,12 @@ int main()
                 printMatrixInputMenu();
                 menuOption = getIntFromStdin();
             }
-            if (menuOption == 3) { break; }
+            if (menuOption == RETURN_TO_MAIN_MENU) { break; }
 
-            int height, width;
-            setDimensions(&height, &width);
+            MatrixDimensions dimensions = getDimensionsFromStdin();
 
-            if (menuOption == 1) { matrixA = fillMatrix(height, width); }
-            else { matrixB = fillMatrix(height, width); }
+            if (menuOption == 1) { matrixA = fillMatrix(dimensions.height, dimensions.width); }
+            else { matrixB = fillMatrix(dimensions.height, dimensions.width); }
 
             break;
         }
@@ -204,8 +209,8 @@ void printMatrixMenu()
 }
 
 /**
- * @brief Set the dimensions of the matrix based on user
- * input, then fill with integers based on user input.
+ * @brief Create a new matrix of the incoming dimensions,
+ * then fill with integers based on user input.
  *
  * Matrices are stored as a vector of int vectors, where one
  * vector<int> is a single row.
@@ -417,31 +422,37 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
 }
 
 /**
- * @brief Set the height and width of the matrix.
+ * @brief Get the desired height and width of the matrix from
+ * cin.
  *
- * @param[out] height A pointer to the integer representing the desired height of the matrix
- * @param[out] width A pointer to the integer representing the desired width of the matrix
+ * @return A MatrixDimensions struct
  */
-void setDimensions(int *height, int *width) // TODO struct Dimension
+MatrixDimensions getDimensionsFromStdin()
 {
+    MatrixDimensions dimensions;
+
     cout << "\nHeight: ";
     // Clear the new line char from previous inputs.
     cin.ignore(1, '\n');
 
-    *height = getLineFromStdin();
-    while (*height <= 0)
+    int height = getLineFromStdin();
+    while (height <= 0)
     {
         cout << "\nError: Please enter a single positive number.\nHeight: ";
-        *height = getLineFromStdin();
+        height = getLineFromStdin();
     }
+    dimensions.height = height;
 
     cout << "Width: ";
-    *width = getLineFromStdin();
-    while (*width <= 0)
+    int width = getLineFromStdin();
+    while (width <= 0)
     {
         cout << "\nError: Please enter a single positive number.\nWidth: ";
-        *width = getLineFromStdin();
+        width = getLineFromStdin();
     }
+    dimensions.width = width;
+    
+    return dimensions;
 }
 
 /**
