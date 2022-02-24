@@ -367,7 +367,23 @@ bool isMultiplicationValid(matrix first, matrix second)
 matrix multiplyMatrices(matrix first, matrix second)
 {
     matrix product;
-
+    // productHeight = firstHeight.
+    for (int row = 0; row < first.size(); ++row)
+    {
+        vector<int> newRow;
+        // productWidth = secondWidth.
+        for (int col = 0; col < second[0].size(); ++col)
+        {
+            // picks from identity matrix path
+            int dotProduct = 0;
+            for (int numIndex = 0; numIndex < first[0].size(); ++numIndex)
+            {
+                dotProduct += first[col][numIndex] * second[numIndex][col]; // TODO index out of bounds (col - needs to be row, but must incrememnt every time)
+            }
+            newRow.push_back(dotProduct);
+        }
+        product.push_back(newRow);
+    }
     return product;
 }
 
