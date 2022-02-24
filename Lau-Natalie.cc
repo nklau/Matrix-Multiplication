@@ -56,15 +56,15 @@ void printMatrix(matrix);
 matrixRow fillRow(int);
 int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
+bool isNumber(string);
+bool isCharDigit(char); // TODO lambda fn
 
 // User input
-MatrixDimensions getDimensionsFromStdin();
 void multiplyUserInput(matrix, matrix);
 void printMatrixUserInput(matrix, matrix);
-bool isNumber(string);
-bool checkChar(char); // TODO rename and/or lambda fn
 int getIntFromStdin();
 int getLineFromStdin();
+MatrixDimensions getDimensionsFromStdin();
 
 int main()
 {
@@ -505,7 +505,7 @@ bool isNumber(string str)
         str = str.substr(1);
     }
 
-    return (!str.empty() && find_if(str.begin(), str.end(), checkChar) == str.end());
+    return (!str.empty() && find_if(str.begin(), str.end(), isCharDigit) == str.end());
 }
 
 /**
@@ -516,7 +516,7 @@ bool isNumber(string str)
  * 
  * @return true if c is an int, false otherwise
  */
-bool checkChar(char c)
+bool isCharDigit(char c)
 {
     return !isdigit(c);
 }
