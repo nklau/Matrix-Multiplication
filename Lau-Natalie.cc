@@ -46,6 +46,7 @@ bool isMultiplicationValid(matrix, matrix);
 
 // User input
 void multiplyUserInput(matrix, matrix);
+void printMatrixUserInput(matrix, matrix);
 bool isNumber(string);
 bool checkChar(char);
 int userInt();
@@ -116,18 +117,7 @@ int main()
         }
         case 4:
         {
-            printMatrixMenu();
-
-            input = userInt();
-            while (input < 1 || input > 3)
-            {
-                cout << "Please enter a valid input.\n";
-                printMatrixMenu();
-                input = userInt();
-            }
-            if (input == 3) { break; }
-
-            printMatrix(input == 1 ? matrixA : matrixB);
+            printMatrixUserInput(matrixA, matrixB);
             break;
         }
         case 5:
@@ -369,8 +359,8 @@ matrixRow fillRow(int maxIndex)
 }
 
 /**
- * @brief Decide order of matrix multiplication, then print result
- * of computation.
+ * @brief Decide order of matrix multiplication based on
+ * user input, then print result of computation.
  * 
  * @param matrixA The first matrix operand
  * @param matrixB The second matrix operand
@@ -396,6 +386,29 @@ void multiplyUserInput(matrix matrixA, matrix matrixB)
     }
     matrix product = multiplyMatrices(bBeforeA ? matrixB : matrixA, bBeforeA ? matrixA : matrixB);
     printMatrix(product);
+}
+
+/**
+ * @brief Determine which matrix to print based on user input, then print
+ * that matrix.
+ * 
+ * @param matrixA The first matrix currently stored
+ * @param matrixB The second matrix currently stored
+ */
+void printMatrixUserInput(matrix matrixA, matrix matrixB)
+{
+    printMatrixMenu();
+
+    int input = userInt();
+    while (input < 1 || input > 3)
+    {
+        cout << "Please enter a valid input.\n";
+        printMatrixMenu();
+        input = userInt();
+    }
+    if (input == 3) { return; }
+
+    printMatrix(input == 1 ? matrixA : matrixB);
 }
 
 /**
