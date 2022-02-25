@@ -57,7 +57,6 @@ matrixRow fillRow(int);
 int dotProduct(matrixRow, matrixRow);
 bool isMultiplicationValid(matrix, matrix);
 bool isNumber(string);
-bool isCharDigit(char); // TODO lambda fn
 bool intInRange(int, int, int);
 
 // User input
@@ -77,7 +76,7 @@ int main()
         printMenu();
         menuOption = getIntFromStdin();
         // Continually ask for user input until input is an int from 1 to 5 (inclusive)
-        while (!intInRange(menuOption, 1, 5)) // TODO replace 1 and 5?
+        while (!intInRange(menuOption, 1, 5))
         {
             cout << "Please enter a valid input.\n";
             printMenu();
@@ -91,7 +90,7 @@ int main()
             printMatrixInputMenu();
 
             menuOption = getIntFromStdin();
-            while (!intInRange(menuOption, 1, 3)) // TODO replace 1 and 3?
+            while (!intInRange(menuOption, 1, 3))
             {
                 cout << "Please enter a valid input.\n";
                 printMatrixInputMenu();
@@ -410,7 +409,7 @@ void printMatrixUserInput(matrix matrixA, matrix matrixB)
     printMatrixMenu();
 
     int menuOption = getIntFromStdin();
-    while (!intInRange(menuOption, 1, 3)) // TODO replace?
+    while (!intInRange(menuOption, 1, 3))
     {
         cout << "Please enter a valid input.\n";
         printMatrixMenu();
@@ -505,20 +504,7 @@ bool isNumber(string str)
         str = str.substr(1);
     }
 
-    return (!str.empty() && find_if(str.begin(), str.end(), isCharDigit) == str.end());
-}
-
-/**
- * @brief Check if the incoming character is a digit. A digit
- * is an int from 0 to 9 (inclusive).
- * 
- * @param c The char to check
- * 
- * @return true if c is an int, false otherwise
- */
-bool isCharDigit(char c)
-{
-    return !isdigit(c);
+    return (!str.empty() && find_if(str.begin(), str.end(), [](char c) { return !isdigit(c); }) == str.end());
 }
 
 /**
