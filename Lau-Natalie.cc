@@ -9,7 +9,7 @@
  *
  * Matrices are stored as std::vector<std::vector<int> >
  * 
- * Compile using 'g++ -std=c++11 Lau-Natalie.cc -o Lau-Natalie && ./Lau-Natalie'
+ * Compile using 'g++ -std=c++11 Lau-Natalie.cc'
  *
  * @date 2022-02-18
  *
