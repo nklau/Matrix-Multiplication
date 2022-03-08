@@ -1,4 +1,4 @@
-#Matrix Multiplication and Transposition
+# Matrix Multiplication and Transposition
 
 Input and store MxN matrices while running the program.
 Compute matrix multiplication and transposition of stored matrices.
