@@ -7,4 +7,4 @@ A matrix is stored as a `std::vector<std::vector<int> >`.
 
 ---
 
-Compile and run from the command line using "g++ -std=c++11 MatrixMultiplication.cc && ./a.out"
+Compile and run from the command line using `g++ -std=c++11 MatrixMultiplication.cc && ./a.out`.
