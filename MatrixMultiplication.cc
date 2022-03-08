@@ -1,5 +1,5 @@
 /**
- * @file Lau-Natalie.cc
+ * @file MatrixMultiplication.cc
  *
  * @author Natalie Lau
  * Contact: nklau2016@gmail.com
@@ -9,7 +9,7 @@
  *
  * Matrices are stored as std::vector<std::vector<int> >
  * 
- * Compile using 'g++ -std=c++11 Lau-Natalie.cc'
+ * Compile using 'g++ -std=c++11 MatrixMultiplication.cc'
  *
  * @date 2022-02-18
  *
